@@ -4,6 +4,7 @@
 
 | Alumnos                     | No. de Cuenta |
 | --------------------------- | ------------- |
+| Edgar José Reyes Montelongo | 319023275     |  
 | González Tamariz Santiago   |               |
 | Paredes Zamudio Luis Daniel | 318159926     |
 
