@@ -29,7 +29,7 @@ class WeatherApi:
     def __init__(self):
         pass
     @staticmethod
-    def GetWeatherAtTime(lat,lon,hour):
+    def GetWeatherAtTime(lat,lon,hour,key):
         '''
         Funcion de llamada a la API, Obtiene los datos de las coordenadas dadas a la hora mas cercana posible a la que se ingresa.
 
@@ -37,6 +37,7 @@ class WeatherApi:
             lat(double):Latitud de la ubicacion
             lon(double):Longitud de la ubicacion
             hour(int):Hora dada
+            key(str): la clave dada.
         Returns:
             climate(Weather): Un objeto Weather con la informacion necesaria
         
@@ -45,24 +46,62 @@ class WeatherApi:
         
             nearestHour=(datetime.datetime.now().replace(hour=hour,minute=0,second=0,microsecond=0))
             try:
-                Data=WeatherApi.__CallApi(lat,lon)
+                Data=WeatherApi.__CallApi(lat,lon,key)
             except:
                 return "ErrorDeAPI"
             #Se obtiene la menor diferencia entre el tiempo solicitado y el estado del tiempo en la hora solicitada
             nearestForecast= min([abs(datetime.datetime.fromtimestamp(int(i["dt"]))-nearestHour) for i in Data.json()["list"]])
             #Se vuelve a sumar la hora redondeada mas cercana para obtener el timestamp de linux
+            #esto arregla un error aritmetico, no es la solucion mas bonita, pero funciona.
             nearestForecast+=nearestHour
+            if(hour%3==1):
+                    nearestForecast+=datetime.timedelta(hours=1)
             for i in Data.json()["list"]:
                 if (i["dt"]==datetime.datetime.timestamp(nearestForecast)):
-                    resultado= Weather(i["weather"][0]["main"],i["main"]["temp_min"],i["main"]["temp_max"],i["main"]["humidity"],datetime.datetime.timestamp(nearestForecast))
-                    return resultado
+                    result= Weather(i["weather"][0]["main"],i["main"]["temp_min"],i["main"]["temp_max"],i["main"]["humidity"],datetime.datetime.timestamp(nearestForecast))
+                    return result
             
         else:
             raise WeatherTimeException()
     @staticmethod
-    def __CallApi(lat,lon):
+    def GetWeatherArray(lat,lon,key):
+        '''
+        Funcion de llamada a la API, Obtiene los datos de las 24 horas en forma de array, donde el indice N equivale a la hora N, acotado en [0,23], las horas pasadas son None, las horas actuales y futuras son objetos weather.
+
+        Parameters:
+            lat(double):Latitud de la ubicacion
+            lon(double):Longitud de la ubicacion
+            key(str): la clave dada.
+        Returns:
+            climate(Weather[]):Un array de Weather[], a excepcion de los None[] de las horas pasadas
+        
+        '''
+        try:
+            Data=WeatherApi.__CallApi(lat,lon,key)
+        except:
+            return "ErrorDeAPI"
+        result=[]
+        for j in range(24):
+            if (int(datetime.datetime.now().strftime("%H"))< int(datetime.datetime.now().replace(hour=j).strftime("%H"))):
+                nearestHour=(datetime.datetime.now().replace(hour=j,minute=0,second=0,microsecond=0))
+                nearestForecast= min([abs(datetime.datetime.fromtimestamp(int(i["dt"]))-nearestHour) for i in Data.json()["list"]])
+                nearestForecast+=nearestHour
+                #esto arregla un error aritmetico, no es la solucion mas bonita, pero funciona.
+                if(j%3==1):
+                    nearestForecast+=datetime.timedelta(hours=1)
+                for i in Data.json()["list"]:
+                    if (i["dt"]==datetime.datetime.timestamp(nearestForecast)):
+                        weather = Weather(i["weather"][0]["main"],i["main"]["temp_min"],i["main"]["temp_max"],i["main"]["humidity"],datetime.datetime.timestamp(nearestForecast))
+                        result.append(weather)
+            else:
+                result.append(None)
+        return result
+
+        
+    @staticmethod
+    def __CallApi(lat,lon,key):
             try:
-                rawWeatherData=requests.get("https://api.openweathermap.org/data/2.5/forecast?lat="+str(lat)+"&lon="+str(lon)+"&appid=9565343fefb88530783ccaba0f469e39&units=metric")
+                rawWeatherData=requests.get("https://api.openweathermap.org/data/2.5/forecast?lat="+str(lat)+"&lon="+str(lon)+"&appid="+key+"&units=metric")
             except:
                 raise requests.exceptions.RequestException
             if(rawWeatherData.json()["cod"]!='200'):
