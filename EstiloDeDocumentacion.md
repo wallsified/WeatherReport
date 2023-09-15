@@ -80,9 +80,9 @@ def says(self, algo=None):
         NotImplementedError
             Explicación sobre la excepcion
 
-				Autor(es)
-				-------
-				@suArrobaEnGithub		
+		Autor(es)
+		-------
+		@suArrobaEnGithub		
         """
 ```
 

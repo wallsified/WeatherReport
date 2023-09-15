@@ -9,14 +9,16 @@ Google ya que es un wrapper (y añadidos) de Flutter
 Author:  @wallsified
 Version: 1.0
 """
+from typing import Final
 import flet as ft
 
-# Paleta de Colores de la GUI
-GRAY_BLUE = '#597f97'
-CLEAR_BLUE = '#c4cbd8'
-GRAY = '#6c747c'
-NAVY_BLUE = '#183251'
-LIGHT_GRAY = '#c8c4c4'
+# Paleta de Colores de la GUI. La declaración de esta forma es lo más parecido
+# a un "final"
+GRAY_BLUE: Final = '#597f97'
+CLEAR_BLUE: Final = '#c4cbd8'
+GRAY: Final = '#6c747c'
+NAVY_BLUE: Final = '#183251'
+LIGHT_GRAY: Final = '#c8c4c4'
 
 def main(page : ft.Page):
     """Método Main para poder ejecutar la Ventana Principal
