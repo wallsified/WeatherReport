@@ -19,10 +19,12 @@
 
 ## Ejecución del Programa
 
+Crear el archivo .env copiando el .env.example y llenar los apartados
+
 En la carpeta del proyecto se abre la terminal y se ejecutan los siguientes comandos:
 
 ```
-
+pipenv run python run.py
 ```
 
 
