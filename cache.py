@@ -38,6 +38,7 @@ def BanderaCache(*, reiniciar: bool = False):
         json_data: dict
             La lectura de un archivo json en variable dic
                 Formato predeterminado (vacío): {"Bandera": "fecha:str", "Registros": {}}
+                La clave "Registros" del diccionario es un diccionario con las IATAS como claves, y cada clave IATA es una lista formada por 24 horas obtenidas de la API. Cada lista de hora contiene una lista con los parámetros [clima:str, temperatura_min:int, temperatura_max:int, humedad: int, hora: int]
     '''
     if reiniciar:
         json_data=None
