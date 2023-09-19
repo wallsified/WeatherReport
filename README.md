@@ -14,6 +14,7 @@
 ## Ejecución del Programa
 
 Crear el archivo .env copiando el .env.example y llenar los apartados
+(o tener la api key en las variables de entorno `API_KEY=key`)
 
 En la carpeta del proyecto se abre la terminal y se ejecutan los siguientes comandos:
 
