@@ -22,22 +22,22 @@ LIGHT_GRAY: Final = '#c8c4c4'
 
 def new_elevated_button():
     """ 
-	Método para construir una instancia de ElevatedButton
-	con caracterísitcas fijas. 
-	
+    Método para construir una instancia de ElevatedButton
+    con caracterísitcas fijas. 
     """
     return ft.ElevatedButton(
-		style= ft.ButtonStyle
-			(color= {
-				ft.MaterialState.HOVERED: ft.colors.WHITE,
-				ft.MaterialState.FOCUSED: ft.colors.WHITE,
-				ft.MaterialState.DEFAULT: ft.colors.BLACK,
-				},
-			overlay_color=ft.colors.TRANSPARENT,
-			elevation={"pressed": 0, "": 1},
-			bgcolor={ft.MaterialState.HOVERED: NAVY_BLUE, "": CLEAR_BLUE}
-				)
-	)
+        style=ft.ButtonStyle(
+            color={
+                ft.MaterialState.HOVERED: ft.colors.WHITE,
+                ft.MaterialState.FOCUSED: ft.colors.WHITE,
+                ft.MaterialState.DEFAULT: ft.colors.BLACK,
+            },
+            overlay_color=ft.colors.TRANSPARENT,
+            elevation={"pressed": 0, "": 1},
+            bgcolor={ft.MaterialState.HOVERED: NAVY_BLUE, "": CLEAR_BLUE}
+        )
+    )
+
 
 def new_text_button():
     """ 
@@ -45,26 +45,26 @@ def new_text_button():
     con caracterísitcas fijas. 
     """
     return ft.TextButton(
-		style=ft.ButtonStyle(
-		padding={ft.MaterialState.HOVERED: 20},
-		# BUG: overlay_color=ft.colors.TRANSPARENT,
-		# BUG: elevation={"pressed": 0, "": 1},
-		animation_duration=200
-		)
-	)
+        style=ft.ButtonStyle(
+            padding={ft.MaterialState.HOVERED: 20},
+            # BUG: overlay_color=ft.colors.TRANSPARENT,
+            # BUG: elevation={"pressed": 0, "": 1},
+            animation_duration=200
+        )
+    )
+
 
 def new_text_field():
     """ 
-	Método para construir una instancia de TextField
-	con caracterísitcas fijas. 
-	
+    Método para construir una instancia de TextField
+    con caracterísitcas fijas. 
     """
     return ft.TextField(
-		border_color = NAVY_BLUE,
-		keyboard_type= ft.KeyboardType.TEXT,
-		max_lines= "1",
-		multiline= False,
-		disabled= False,
-		capitalization= ft.TextCapitalization.WORDS,
-		filled= True,
-	)
+        border_color=NAVY_BLUE,
+        keyboard_type=ft.KeyboardType.TEXT,
+        max_lines="1",
+        multiline=False,
+        disabled=False,
+        capitalization=ft.TextCapitalization.WORDS,
+        filled=True,
+    )
