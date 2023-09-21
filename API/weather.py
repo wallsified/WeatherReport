@@ -120,12 +120,16 @@ class WeatherApi:
                 #esto arregla un error aritmetico, no es la solucion mas bonita, pero funciona.
                 if j%3==1:
                     nearest_forecast+=datetime.timedelta(hours=1)
+                appended=False
                 for i in Data.json()["list"]:
                     if i["dt"]==datetime.datetime.timestamp(nearest_forecast):
                         weather = Weather(i["weather"][0]["main"],i["main"]["temp_min"],
                                           i["main"]["temp_max"],i["main"]["humidity"],
                                           datetime.datetime.timestamp(nearest_forecast))
                         result.append(weather)
+                        appended=True
+                if not appended:
+                    result.append(result[j-1])
             else:
                 result.append(None)
         return result
