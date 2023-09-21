@@ -1,5 +1,8 @@
-""" Archivo de Manejo del Caché """
-
+""" 
+Archivo de Manejo del Caché 
+Author: @TheSinotec
+Version: 1.0
+"""
 # Libreria para lectura del DATA_SET *.csv
 import csv
 # Libreria para la lectura y escritura del caché *.json
@@ -11,7 +14,7 @@ import threading
 # Libreria para generar espacios de tiempo de ejecución
 import time
 # Se importan las clases del documento Weather.py
-from API import weather
+import weather
 
 # Variables globales para el uso de procesos y subprocesos internos
 global TIMER_RUNS, THREAD, API_KEY, JSON_CACHE, DATA_SET, ACT
@@ -21,9 +24,9 @@ act = threading.Event()
 TIMER_RUNS = threading.Event()
 
 # Llaves, nombre del archivo caché y del DATA_SET empleado, respectivamente
-API_KEY = 'INSERTE APLIKEY VALIDA'
-JSON_CACHE = 'cache.json'
-DATA_SET = 'DATA_SET2.csv'
+API_KEY = '5e31a7313683592fc55490ec53637486'
+JSON_CACHE = 'Results/cache.json'
+DATA_SET = 'Resources/dataset.csv'
 
 
 def cache_flag(*, reiniciar: bool = False):
@@ -51,7 +54,7 @@ def cache_flag(*, reiniciar: bool = False):
         json_data = None
     else:
         try:
-            with open(JSON_CACHE, 'r') as file:
+            with open(JSON_CACHE, mode = 'r', encoding= "utf-8") as file:
                 json_data = json.load(file)
                 print('Caché habil')
                 cache_check(json_data)
@@ -64,7 +67,7 @@ def cache_flag(*, reiniciar: bool = False):
         json_data['flag'] = str(datetime.datetime.now())
         json_data['Registros'] = {}
         print('Se creó el cache')
-        with open(JSON_CACHE, 'w') as file:
+        with open(JSON_CACHE, mode = 'w', encoding= "utf-8") as file:
             json.dump(json_data, file)
     return json_data
 
@@ -136,7 +139,7 @@ def iata_registry():
     regs['Registros'] = []
 
     try:
-        with open(DATA_SET, newline='') as file:
+        with open(DATA_SET, newline='', encoding= "utf-8") as file:
             data = csv.DictReader(file)
             for row in data:
                 try:
@@ -168,7 +171,7 @@ def recache():
     '''
     regs = iata_registry()
     flag = cache_flag(reiniciar=True)
-    with open(JSON_CACHE, 'r') as file:
+    with open(JSON_CACHE, mode = 'r', encoding= "utf-8") as file:
         data = json.load(file)
     for i in range(0, len(regs['Registros'])):
         if (i + 1) % 60 == 0:
@@ -180,7 +183,7 @@ def recache():
         if isinstance(wter, list) is False:
             print("Error al llamar a la API")
             break
-        for k in range(24):
+        for k in range(23):
             try:
                 data['Registros'][str(regs['Registros'][i][0])].append(
                     [wter[k].climate, wter[k].temp_min, wter[k].temp_max, wter[k].humidity,
@@ -188,7 +191,7 @@ def recache():
             except AttributeError:
                 data['Registros'][str(regs['Registros'][i][0])].append(
                     ['NULL', 'NULL', 'NULL', 'NULL', 'NULL'])
-        with open(JSON_CACHE, 'w') as file:
+        with open(JSON_CACHE, mode = 'w', encoding= "utf-8") as file:
             json.dump(data, file)
 
     print("Cache actualizado:", flag['flag'])
@@ -223,5 +226,4 @@ def cache_initiate():
 
 
 if __name__ == '__main__':
-    # Esto es una prueba del funcionamiento SOLO LA PRIMERA LINEA ES ESCENCIAL
     cache_initiate()

@@ -18,7 +18,11 @@ CLEAR_BLUE: Final = '#c4cbd8'
 GRAY: Final = '#6c747c'
 NAVY_BLUE: Final = '#183251'
 LIGHT_GRAY: Final = '#c8c4c4'
+CLOUD_WHITE: Final = "#ecf0f1"
 
+ft.Page.fonts = {
+    'Caviar': 'Assets/fonts/CaviarDreams.ttf'
+}
 
 def new_elevated_button():
     """ 
@@ -32,10 +36,11 @@ def new_elevated_button():
                 ft.MaterialState.FOCUSED: ft.colors.WHITE,
                 ft.MaterialState.DEFAULT: ft.colors.BLACK,
             },
+            padding= 5,
             overlay_color=ft.colors.TRANSPARENT,
             elevation={"pressed": 0, "": 1},
-            bgcolor={ft.MaterialState.HOVERED: NAVY_BLUE, "": CLEAR_BLUE}
-        )
+            bgcolor={ft.MaterialState.HOVERED: NAVY_BLUE, "": CLEAR_BLUE},
+        ),
     )
 
 
@@ -67,4 +72,36 @@ def new_text_field():
         disabled=False,
         capitalization=ft.TextCapitalization.WORDS,
         filled=True,
+    )
+
+def new_data_table():
+    """ 
+    Método para construir una instancia de DataTable
+    con caracterísitcas fijas. 
+    """
+    return ft.DataTable(
+        border=ft.border.all(1, "black"),
+        border_radius=15,
+        heading_row_height=50,
+        divider_thickness=2,
+        heading_text_style=ft.TextStyle(font_family='Caviar', size=13,
+                                      color="black", weight='W_300'),
+        horizontal_margin=5,
+        bgcolor= CLEAR_BLUE,
+        vertical_lines=ft.border.BorderSide(1, NAVY_BLUE),
+        column_spacing=25,
+        width=1000,
+    )
+
+def new_grid_view():
+    """ test """
+    return ft.GridView(
+        expand=1,
+        runs_count=10,
+        max_extent=100,
+        child_aspect_ratio=1.0,
+        spacing=5,
+        run_spacing=5,
+        horizontal= True,
+        
     )
