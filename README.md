@@ -34,5 +34,7 @@ $ pipenv run python run.py
 
 ## Notas
 
+<!-- flet pack search_window.py --name WeatherReporter --icon Assets/images/plane.png -->
+<!-- search_window es temporalmente el main.py -->
 
 > _Hecho en VsCode por que Vim da miedo..._
