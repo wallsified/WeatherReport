@@ -43,7 +43,6 @@ def new_elevated_button():
         ),
     )
 
-
 def new_text_button():
     """ 
     Método para construir una instancia de TextButton
@@ -57,7 +56,6 @@ def new_text_button():
             animation_duration=200
         )
     )
-
 
 def new_text_field():
     """ 
@@ -102,6 +100,58 @@ def new_grid_view():
         child_aspect_ratio=1.0,
         spacing=5,
         run_spacing=5,
-        horizontal= True,
-        
+        horizontal= False,
+    )
+
+def table_headers():
+    """
+    Método para crear los encabezados de la tabla para mostrar
+    la información resultante de la búsqueda.
+    """
+    return ft.DataTable(
+        border=ft.border.all(1, "black"),
+        border_radius=15,
+        heading_row_height=65,
+        divider_thickness=2,
+        heading_text_style=ft.TextStyle(font_family='Caviar', size=15,
+                                      color="black", weight='W_300'),
+        #horizontal_margin=5,
+        bgcolor=CLEAR_BLUE,
+        vertical_lines=ft.border.BorderSide(1, NAVY_BLUE),
+        column_spacing=30,
+        width=1000,
+        columns=[
+            ft.DataColumn(
+                ft.Text(value= "IATA\nPartida", text_align= 'CENTER'),
+                tooltip="Identificador IATA del Lugar de Origen"
+            ),
+            ft.DataColumn(
+                ft.Text(value= "Latitud\nPartida",text_align= 'CENTER'),
+                tooltip="Latitud del Lugar de Origen"
+            ),
+            ft.DataColumn(
+                ft.Text(value= "Longitud\nPartida", text_align= 'CENTER'),
+                tooltip="Longitud del Lugar de Origen"
+            ),
+            ft.DataColumn(
+                ft.Text("Clima\nPartida"),
+                tooltip="Clima del Punto de Partida"
+            ),
+            ft.DataColumn(
+                ft.Text(value="IATA\nDestino", text_align= 'CENTER'),
+                tooltip="Identificador IATA del Lugar de Destino"
+            ),
+            ft.DataColumn(
+                ft.Text(value="Latitud\nDestino", text_align= 'CENTER'),
+                tooltip="Latitud del Lugar de Destino"
+            ),
+            ft.DataColumn(
+                ft.Text(value="Longitud\nDestino", text_align= 'CENTER'),
+                tooltip="Longitud del Lugar de Destino"
+            ),
+            ft.DataColumn(
+                ft.Text(value="Clima\nDestino", text_align= 'CENTER'),
+                tooltip="Clima del Punto de Destino"
+            ),
+        ],
     )
