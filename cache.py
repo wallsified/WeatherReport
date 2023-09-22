@@ -16,7 +16,7 @@ import Weather
 act = threading.Event()
 timer_runs = threading.Event()
 # Llaves, nombre del archivo caché y del dataset empleado, respectivamente
-apikey = 'e0d83f99bbcb3340ad416e9483d494a0'
+apikey = 'INCERTE APLIKEY VALIDA'
 json_cache = 'cache.json'
 dataset = 'dataset2.csv'
 
