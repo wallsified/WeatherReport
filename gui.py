@@ -72,11 +72,16 @@ def main(page: ft.Page):
             return;
 
         
-        names_sorted = sorted(data.get_names_list(), key=lambda n: distance(text, n))
+        names_sorted = sorted(
+                data.get_valid_names_list(),
+                key=lambda n: distance(text.lower(), n.lower(), weights=(1, 2, 3))
+                )
+        print(names_sorted[0:20])
         iata = data.get_iata(names_sorted[0])
         print(iata)
         if not data.is_valid_iata(iata):
             btn_search.disabled = False
+            page.update()
             return
         data = weather.get(iata)
         print("done")

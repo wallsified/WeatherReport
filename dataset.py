@@ -11,6 +11,17 @@ class DatasetManager():
         self.names_list = list()
         self.read_names()
 
+        def valid_name(name):
+            if self.coords.get(name):
+                return True
+
+            if self.coords.get(self.names.get(name)):
+                return True
+
+            return False
+
+        self.valid_names = filter(valid_name, self.names_list)
+
 
     def read_tickets(self):
         file = open("dataset.csv")
@@ -51,9 +62,11 @@ class DatasetManager():
 
             self.names[line[0]] = line[2]
             self.names[line[1]] = line[2]
+            self.names[line[2]] = line[2]
 
             self.names_list.append(line[0])
             self.names_list.append(line[1])
+            self.names_list.append(line[2])
 
         file.close()
 
@@ -74,3 +87,6 @@ class DatasetManager():
 
     def get_iata(self, name):
         return self.names.get(name)
+
+    def get_valid_names_list(self):
+        return self.valid_names
