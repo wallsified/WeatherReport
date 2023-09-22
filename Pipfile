@@ -5,6 +5,8 @@ name = "pypi"
 
 [packages]
 flet = "*"
+requests = "*"
+levenshtein = "*"
 
 [dev-packages]
 

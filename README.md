@@ -13,7 +13,8 @@
 
 ## Dependencias
 
-- 
+- Flet
+- Requests
 
 <br>
 
@@ -22,7 +23,8 @@
 En la carpeta del proyecto se abre la terminal y se ejecutan los siguientes comandos:
 
 ```
-
+pipenv install
+pipenv shell flet main.py
 ```
 
 
