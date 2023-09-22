@@ -9,7 +9,11 @@ necesita tener algunos valores de por medio declarados como en los métodos
 siguientes.
 
 """
+# Esto ayuda a que la hora de interpretar el archivo
+# se pueda acercar a una variable "final"
 from typing import Final
+
+# Librería Gráfica
 import flet as ft
 
 # Paleta de Colores de la GUI. La declaración de esta forma es lo más parecido a un "final"
@@ -20,6 +24,7 @@ NAVY_BLUE: Final = '#183251'
 LIGHT_GRAY: Final = '#c8c4c4'
 CLOUD_WHITE: Final = "#ecf0f1"
 
+# Tipografias para los métodos posteriores
 ft.Page.fonts = {
     'Caviar': 'Assets/fonts/CaviarDreams.ttf'
 }
@@ -28,6 +33,10 @@ def new_elevated_button():
     """ 
     Método para construir una instancia de ElevatedButton
     con caracterísitcas fijas. 
+    
+    Regresa 
+    ----------
+    Nueva Instancia de ElevatedButton
     """
     return ft.ElevatedButton(
         style=ft.ButtonStyle(
@@ -43,10 +52,15 @@ def new_elevated_button():
         ),
     )
 
+# Método a Eliminar al final
 def new_text_button():
     """ 
     Método para construir una instancia de TextButton
     con caracterísitcas fijas. 
+    
+    Regresa 
+    ----------
+    Nueva Instancia de TextButton
     """
     return ft.TextButton(
         style=ft.ButtonStyle(
@@ -61,6 +75,10 @@ def new_text_field():
     """ 
     Método para construir una instancia de TextField
     con caracterísitcas fijas. 
+    
+    Regresa 
+    ----------
+    Nueva Instancia de TextField
     """
     return ft.TextField(
         border_color=NAVY_BLUE,
@@ -72,10 +90,15 @@ def new_text_field():
         filled=True,
     )
 
+# Método a Eliminar al final
 def new_data_table():
     """ 
     Método para construir una instancia de DataTable
     con caracterísitcas fijas. 
+    
+    Regresa 
+    ----------
+    Nueva Instancia de DataTable
     """
     return ft.DataTable(
         border=ft.border.all(1, "black"),
@@ -92,7 +115,14 @@ def new_data_table():
     )
 
 def new_grid_view():
-    """ test """
+    """" 
+    Método para construir una instancia de GridView
+    con caracterísitcas fijas. 
+    
+    Regresa 
+    ----------
+    Nueva Instancia de GridView
+    """
     return ft.GridView(
         expand=1,
         runs_count=10,
@@ -107,6 +137,11 @@ def table_headers():
     """
     Método para crear los encabezados de la tabla para mostrar
     la información resultante de la búsqueda.
+        
+    Regresa 
+    ----------
+    Nueva Instancia de DataTable con información fija para los 
+    encabezados
     """
     return ft.DataTable(
         border=ft.border.all(1, "black"),

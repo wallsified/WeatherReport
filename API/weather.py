@@ -4,18 +4,28 @@ import requests
 
 class Weather():
     '''
-    Estructura que contiene la informacion del clima en la hora X
+    Estructura que contiene la informacion del clima en una hora
+    predeterminada
+    
+    Métodos
+    -------
+    * __init__(self, climate, temp, min, temp_mx, humidity, hour):  
+        Inicialización de la clase
 
-    Parameters:
-       clima(str):Codigo del clima, equivale a las variables 'main' de  
-       https://openweathermap.org/weather-conditions#Weather-Condition-Codes-2.
-       temp_min(int):Temperatura minima arrojada por la API para las coordenadas dadas
-       temp_max(int):Lo mismo, pero es la temperatura maxima
-       humidity(int): % de humedad
-       hour(int): el UNIX Timestamp de  la hora resultante.
+    Atributos de Clase
+    ----------
+       * clima(str):Codigo del clima, equivale a las variables 'main' de  
+       * https://openweathermap.org/weather-conditions#Weather-Condition-Codes-2.
+       * temp_min(int):Temperatura minima arrojada por la API para las coordenadas dadas
+       * temp_max(int):Lo mismo, pero es la temperatura maxima
+       * humidity(int): % de humedad
+       * hour(int): el UNIX Timestamp de  la hora resultante.
     '''
 
     def __init__(self,climate,temp_min,temp_max,humidity,hour):
+        """ 
+        Método de Inicialización de la clase.
+        """
         self.climate=climate
         self.temp_min=temp_min
         self.temp_max=temp_max
@@ -26,13 +36,27 @@ class WeatherTimeException(Exception):
     '''
     Clase de excepcion del clima, se debería lanzar cuando hay 
     algo malo en la hora especificada
+    
+    Excepciones
+    -----------
+    WeatherTimeException: Existe algún error en la configuracipon de la hora 
     '''
     #pass
 
 class WeatherApi:
     '''
-    Clase con metodos estaticos para llamar a la API
+    Clase con metodos estaticos para realizar las llamadas a la API
+    de OpenWeather
+    
+    Métodos
+    -------
+    * __init__(self): Método de Inicialización de la Clase.
+    * get_weather_at_time(lat,lon,hour,key): Método para obtener el clima por coordenadas.
+    * get_weather_array(lat,lon,key): Método para crear un arreglo de climas.
+    * __call_api(lat,lon,key): Método que maneja las llamadas a API.
+    
     '''
+    
     def __init__(self):
         pass
 
@@ -42,13 +66,15 @@ class WeatherApi:
         Funcion de llamada a la API, Obtiene los datos de las coordenadas dadas a la 
         hora mas cercana posible a la que se ingresa.
 
-        Parameters:
-            lat(double):Latitud de la ubicacion
-            lon(double):Longitud de la ubicacion
-            hour(int):Hora dada
-            key(str): la clave dada.
+        Parametros
+        ----------
+            lat(double): Latitud de la ubicacion
+            lon(double): Longitud de la ubicacion
+            hour(int): Hora dada
+            key(str): La clave dada.
         
-        Returns:
+        Regresa
+        --------
             climate(Weather): Un objeto Weather con la informacion necesaria
         
         '''
@@ -92,13 +118,15 @@ class WeatherApi:
         donde el indice N equivale a la hora N, acotado en [0,23], las horas pasadas son None, 
         las horas actuales y futuras son objetos weather.
 
-        Parameters:
-            lat(double):Latitud de la ubicacion
-            lon(double):Longitud de la ubicacion
-            key(str): la clave dada.
+        Parametros
+        ----------
+            * lat(double):Latitud de la ubicacion
+            * lon(double):Longitud de la ubicacion
+            * key(str): la clave dada.
  
-        Returns:
-            climate(Weather[]):Un array de Weather[], a excepcion de los None[] de las horas pasadas
+        Regresa
+        -------
+            * climate(Weather[]):Un array de Weather[], a excepcion de los None[] de las horas pasadas
         
         '''
         try:
@@ -136,6 +164,15 @@ class WeatherApi:
 
     @staticmethod
     def __call_api(lat,lon,key):
+        """
+        Método para llamar a la API de OpenWeather y recibir información
+        de ella.
+        
+        Regresa
+        ------
+        * raw_weather_data: Información directa de la API sin procesar.
+        
+        """
         try:
             raw_weather_data=requests.get(
                 "https://api.openweathermap.org/data/2.5/forecast?lat="+str(lat)+"&lon="

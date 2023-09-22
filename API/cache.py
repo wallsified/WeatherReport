@@ -30,18 +30,21 @@ DATA_SET = 'Resources/dataset.csv'
 
 
 def cache_flag(*, reiniciar: bool = False):
-    '''Función que verifica el estado y/o crea el archivo de caché *.json.
+    '''
+    Función que verifica el estado y/o crea el archivo de caché *.json.
     Reinicia el caché según el parametro reiniciar, además lee y verifica
     la caducidad del caché en caso de existir un archivo de caché
 
-    Parameters:
-        reiniciar: bool
+    Parametros
+    ----------
+        * reiniciar: bool
             De valor predeterminado False.
             Para True, borra el caché actual y deja un archivo de formato predeterminado.
             Para False, lee el archivo y lo retorna en un diccionario
 
-    Returns:
-        json_data: dict
+    Regresa
+    -----
+        * json_data: dict
             La lectura de un archivo json en variable dic
             Formato predeterminado (vacío): {"flag": "fecha:str", "Registros": {}}
             La clave "Registros" del diccionario es un diccionario con las IATAS como
@@ -73,14 +76,16 @@ def cache_flag(*, reiniciar: bool = False):
 
 
 def cache_check(flag: dict):
-    '''Verifica que el diccionario-caché tenga a lo más 3 horas de antiguedad, 
+    '''
+    Verifica que el diccionario-caché tenga a lo más 3 horas de antiguedad, 
     si excede el tiempo, actualiza caché
 
-    Parametros:
-        flag: dict
+    Parametros
+    ----------
+        * flag: dict
             Diccionario del tipo predeterminado de caché
-
     '''
+    
     tiempo_cache = datetime.datetime.strptime(flag['flag'], "%Y-%m-%d %H:%M:%S.%f")
     tiempo_act = datetime.datetime.now()
 
@@ -91,10 +96,9 @@ def cache_check(flag: dict):
 
 
 def timer():
-    '''Función que ejecuta el subproceso analizer()
-    Emplea las variables globales:
-        t: Thread
-        TIMER_RUNS: Event
+    '''
+    Función que ejecuta el subproceso analizer() Emplea las variables globales 
+    Thread y TIMER_RUNS
     '''
     TIMER_RUNS.set()
     #global THREAD
@@ -103,11 +107,13 @@ def timer():
 
 
 def analizer(TIMER_RUNS):
-    '''Si se llama la función timer() se verifica cada 3 horas el estado del caché.
+    '''
+    Si se llama la función timer() se verifica cada 3 horas el estado del caché.
 
     Mientras el programa funcione, se genera un subproceso que actualiza el caché cada 3 horas
 
-    Parametros:
+    Parametros
+    ----------
         TIMER_RUNS: Event
             Variable de tipo Global usada para generar el subproceso
     '''
@@ -120,7 +126,8 @@ def analizer(TIMER_RUNS):
 
 
 def iata_registry():
-    '''Función que lee el DATA_SET *.csv y regresa los codigos IATA con
+    '''
+    Función que lee el DATA_SET *.csv y regresa los codigos IATA con
     sus (Latitud, Longitud) correspoindientes
 
     Almacena los IATA code junto con sus latitudes y longitudes (sea de llegada o salida)
@@ -128,7 +135,8 @@ def iata_registry():
 
     Usa la variable Global DATA_SET: str, que es el nombre del archivo csv
 
-    Retorno:
+    Regresa
+    -------
         regs: dict
             Diccionario que contiene
             {'Registros': [[IATA0:str, Lat0:float, Lon0:float],
@@ -160,7 +168,8 @@ def iata_registry():
 
 
 def recache():
-    '''Si se llama la función cache_update() se actualiza en segundo plano
+    '''
+    Si se llama la función cache_update() se actualiza en segundo plano
     el contenido del archivo *.json
 
     Reinicia el caché actual y usa los registros no redundantes de iata_registry()
@@ -197,13 +206,12 @@ def recache():
     print("Cache actualizado:", flag['flag'])
     TIMER_RUNS.clear()
     timer()
-    #return None
+    return None
 
 
 def cache_update():
-    '''Función que ejecuta el subproceso recache()
-    Emplea las variables globales:
-        act: Event
+    '''
+    Función que ejecuta el subproceso recache(). Emplea la variable global act.
     '''
     #global ACT
     ACT = threading.Thread(target=recache)
@@ -211,10 +219,11 @@ def cache_update():
 
 
 def cache_initiate():
-    '''Función que inicializa el proceso de cacheado de inicio del programa
-    Evita conflictos al abrir y cerrar el programa
-    Emplea las variables globales:
-        act: Event
+    '''
+    Función que inicializa el proceso de cacheado de inicio del programa.
+    Evita conflictos al abrir y cerrar el programa.
+    Emplea las variabñe global act.
+    
     '''
     act.clear()
     flag = cache_flag(reiniciar=False)
@@ -222,8 +231,7 @@ def cache_initiate():
         cache_update()
     else:
         timer()
-    #return None
-
+    return None
 
 if __name__ == '__main__':
     cache_initiate()

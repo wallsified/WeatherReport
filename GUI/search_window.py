@@ -2,32 +2,44 @@
 Ventana de Búsqueda del clima 
 Author:  @wallsified
 Version: 1.1
+
+Nota: Flet se puede manejar a nivel ventana como una matriz 
+con elementos 'Column' y 'Row', por lo que diversas
+instancias de dichos elementos y derivados cumplen con
+ser la construcción de la ventana. 
+
 """
 import flet as ft
 
 # Métodos de la clase general
 import general_configurations as gc
 
+# Propiedades del botón de búsqueda
 search_initation = gc.new_elevated_button()
 search_initation.text = "Iniciar Busqueda"
 search_initation.icon = ft.icons.SEARCH
 search_initation.width = 320
 search_initation.height = 50
 
+# Propiedades del botón de entrada de texto para la búsqueda
 search_title_button = gc.new_text_field()
 search_title_button.label = "Ingresa tu Búsqueda"
 search_title_button.width = 400
 search_title_button.height = 50
 search_title_button.autofocus = True
 
+# Nueva GridView
 info_grid = gc.new_grid_view()
 
+# Instancia de los encabezados de la tabla de información
 headers = gc.table_headers()
 
+# Propiedades del Botón para limpiar los resultados previos.
 clean_button = gc.new_elevated_button()
 clean_button.text = "Limpiar Resultados"
 clean_button.icon = ft.icons.CLEANING_SERVICES_ROUNDED
 
+# Tipografías de la ventana
 ft.Page.fonts = {
     "Roboto Light": "/fonts/Roboto-Light.ttf",
     "Caviar": "fonts/CaviarDreams.ttf" 
@@ -42,12 +54,6 @@ top_row = ft.ResponsiveRow(
 )
 
 second_row = ft.ResponsiveRow([headers], run_spacing={"sm":30})
-
-
-static_dictionary = {
-    "flightone" : ['MTY', 25.7785, -100.107, 'MTY', 25.7785, -100.107],
-    "flightwo" : ['MEX', 25.7785, -100.107, 'MTY', 25.7785, -100.107]
-}
 
 #lista estática de prueba
 static_list = ['MTY', 25.7785, -100.107, 'Soleado', 'MTY', 25.7785, -100.107, 'Soleado']
@@ -92,7 +98,7 @@ def main(page: ft.Page):
     def add_table(event):
         page.add(datos, clean_button)
         page.update()
-        
+
     def clean_table(event):
         page.remove(datos, clean_button)
         page.update()
