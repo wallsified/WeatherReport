@@ -1,35 +1,33 @@
-#Libreria para lectura del dataset *.csv
+# Libreria para lectura del dataset *.csv
 import csv
-#Libreria para la lectura y escritura del caché *.json
+# Libreria para la lectura y escritura del caché *.json
 import json
-#Libreria para manejo de fecha y hora del computador
+# Libreria para manejo de fecha y hora del computador
 import datetime
-#Libreria para crear procesos en segundo plano
+# Libreria para crear procesos en segundo plano
 import threading
-#Libreria para generar espacios de tiempo de ejecución
+# Libreria para generar espacios de tiempo de ejecución
 import time
 
-#Se importan las clases del documento Weather.py
+# Se importan las clases del documento Weather.py
 import Weather
 
-#Variables globales para el uso de procesos y subprocesos internos
-global timer_runs, t, apikey, json_cache, dataset, act
-#Subprocesos definidos
+# Variables globales para el uso de procesos y subprocesos internos
 act = threading.Event()
 timer_runs = threading.Event()
-#Llaves, nombre del archivo caché y del dataset empleado, respectivamente
-apikey='INCERTE APLIKEY VALIDA'
-json_cache='cache.json'
-dataset='dataset2.csv'
+# Llaves, nombre del archivo caché y del dataset empleado, respectivamente
+apikey = 'e0d83f99bbcb3340ad416e9483d494a0'
+json_cache = 'cache.json'
+dataset = 'dataset2.csv'
 
 
-def BanderaCache(*, reiniciar: bool = False):
+def get_cache(*, reset: bool = False):
     '''Función que verifica el estado y/o crea el archivo de caché *.json
 
-        Reinicia el caché según el parametro reiniciar, además lee y verifica la caducidad del caché en caso de existir un archivo de caché
+        Reinicia el caché según el parametro reset, además lee y verifica la caducidad del caché en caso de existir un archivo de caché
 
     Parametros:
-        reiniciar: bool
+        reset: bool
             De valor predeterminado False.
             Para True, borra el caché actual y deja un archivo de formato predeterminado.
             Para False, lee el archivo y lo retorna en un diccionario
@@ -37,52 +35,50 @@ def BanderaCache(*, reiniciar: bool = False):
     Retorna:
         json_data: dict
             La lectura de un archivo json en variable dic
-                Formato predeterminado (vacío): {"Bandera": "fecha:str", "Registros": {}}
-                
-                La clave "Registros" del diccionario es un diccionario con las IATAS como claves, y cada clave IATA es una lista formada por 24 horas obtenidas de la API. Cada lista de hora contiene una lista con los parámetros [clima:str, temperatura_min:int, temperatura_max:int, humedad: int, hora: int]
+                Formato predeterminado (vacío): {"flag": "fecha:str", "records": {}}
+
+                La clave "records" del diccionario es un diccionario con las IATAS como claves, y cada clave IATA es una lista formada por 24 horas obtenidas de la API. Cada lista de hora contiene una lista con los parámetros [clima:str, temperatura_min:int, temperatura_max:int, humedad: int, hora: int]
     '''
-    if reiniciar:
-        json_data=None
+    if reset:
+        json_data = None
     else:
         try:
-            with open(json_cache,'r') as file:
-                json_data=json.load(file)
+            with open(json_cache, 'r') as file:
+                json_data = json.load(file)
                 print('Caché habil')
-                VerificaCache(json_data)
-        except(FileNotFoundError,json.JSONDecodeError) as e:
+                check_cache(json_data)
+        except(FileNotFoundError, json.JSONDecodeError) as e:
             print(f'Cache no encontrado..({e})')
-            json_data=None
+            json_data = None
     if not json_data:
-        json_data = {}
-        json_data['Bandera'] = str(datetime.datetime.now())
-        json_data['Registros'] = {}
+        json_data = {'flag': str(datetime.datetime.now()), 'records': {}}
         print('Se creó el cache')
-        with open(json_cache,'w') as file:
-            json.dump(json_data,file)
+        with open(json_cache, 'w') as file:
+            json.dump(json_data, file)
     return json_data
 
-def VerificaCache(Bandera: dict):
+
+def check_cache(cache: dict):
     '''Verifica que el diccionario-caché tenga a lo más 3 horas de antiguedad, si excede el tiempo, actualiza caché
 
     Parametros:
-        Bandera: dict
+        cache: dict
             Diccionario del tipo predeterminado de caché
 
     Retorno:
         No
     '''
-    tiempo_cache=datetime.datetime.strptime(Bandera['Bandera'], "%Y-%m-%d %H:%M:%S.%f")
-    tiempo_act=datetime.datetime.now()
-    if (tiempo_act-tiempo_cache)>=datetime.timedelta(hours=3):
-        ActualizarCache()
+    date_cache = datetime.datetime.strptime(cache['flag'], "%Y-%m-%d %H:%M:%S.%f")
+    actual_date = datetime.datetime.now()
+    if (actual_date - date_cache) >= datetime.timedelta(hours=3):
+        update_cache()
     else:
         print("Cache actualizado")
 
-def Temporizador():
-    '''Función que ejecuta el subproceso Analizador()
-        Emplea las variables globales:
-            t: Thread
 
+def timer():
+    '''Función que ejecuta el subproceso analyzer()
+        Emplea la variable global:
             timer_runs: Event
 
     Parametros:
@@ -91,12 +87,12 @@ def Temporizador():
         No
     '''
     timer_runs.set()
-    global t
-    t = threading.Thread(target=Analizador, args=(timer_runs,))
+    t = threading.Thread(target=analyzer, args=(timer_runs,))
     t.start()
 
-def Analizador(timer_runs):
-    '''Si se llama la función Temporizador() se verifica cada 3 horas el estado del caché.
+
+def analyzer(timer_runs):
+    '''Si se llama la función timer() se verifica cada 3 horas el estado del caché.
 
         Mientras el programa funcione, se genera un subproceso que actualiza el caché cada 3 horas
 
@@ -109,10 +105,11 @@ def Analizador(timer_runs):
     while timer_runs.is_set():
         print("Corre el tiempo")
         time.sleep(10800)
-        Bandera=BanderaCache(reiniciar=False)
-        VerificaCache(Bandera)
+        cache = get_cache(reset=False)
+        check_cache(cache)
 
-def RegIATA():
+
+def iata_registration():
     '''Función que lee el dataset *.csv y regresa los codigos IATA con sus (Latitud, Longitud) correspoindientes
 
         Almacena los IATA code junto con sus latitudes y longitudes (sea de llegada o salida) sin repetir entradas del data set.
@@ -122,29 +119,33 @@ def RegIATA():
         No
     Retorno:
         regs: dict
-            Diccionario que contiene {'Registros': [[IATA0:str, Lat0:float, Lon0:float],[IATA1:str, Lat1:float, Lon1:float],...]} según lo obtenido en el dataset
+            Diccionario que contiene {'IATA0:str': [Lat0:float, Lon0:float],'IATA1:str': [Lat1:float, Lon1:float],...]} según lo obtenido en el dataset
     '''
     regs = {}
-    regs['Registros'] = []
     try:
         with open(dataset, newline='') as file:
-            data=csv.DictReader(file)
+            data = csv.DictReader(file)
             for row in data:
                 try:
-                    if [row['origin'],float(row['origin_latitude']),float(row['origin_longitude'])] not in regs['Registros']:
-                        regs['Registros'].append([row['origin'],float(row['origin_latitude']),float(row['origin_longitude'])])
-                    if [row['destination'],float(row['destination_latitude']),float(row['destination_longitude'])] not in regs['Registros']:
-                        regs['Registros'].append([row['destination'],float(row['destination_latitude']),float(row['destination_longitude'])])
+                    if row['origin'] not in regs.keys():
+                        regs[row['origin']] = []
+                        regs[row['origin']].append(float(row['origin_latitude']))
+                        regs[row['origin']].append(float(row['origin_longitude']))
+                    if row['destination'] not in regs.keys():
+                        regs[row['destination']] = []
+                        regs[row['destination']].append(float(row['destination_latitude']))
+                        regs[row['destination']].append(float(row['destination_longitude']))
                 except ValueError:
                     print("Error en valores")
     except FileNotFoundError:
-        print("No se encontró "+dataset)
+        print("No se encontró " + dataset)
     return regs
 
-def Cachear():
-    '''Si se llama la función ActualizarCache() se actualiza en segundo plano el contenido del archivo *.json
 
-        Reinicia el caché actual y usa los registros no redundantes de RegIATA() para hacer un diccionario/archivo *.json. Se llama a la API para cada IATA segun sus coordenadas usando la libreria Weather.py. Además que se ejecuta en segundo plano mientras actualiza y evita más de 60 llamadas por minuto.
+def cacher():
+    '''Si se llama la función update_cache() se actualiza en segundo plano el contenido del archivo *.json
+
+        Reinicia el caché actual y usa los registros no redundantes de iata_registration() para hacer un diccionario/archivo *.json. Se llama a la API para cada IATA segun sus coordenadas usando la libreria Weather.py. Además que se ejecuta en segundo plano mientras actualiza y evita más de 60 llamadas por minuto.
 
     Parametros:
         No
@@ -152,33 +153,37 @@ def Cachear():
     Retorno:
         No
     '''
-    regs=RegIATA()
-    Bandera=BanderaCache(reiniciar=True)
-    with open(json_cache,'r') as file:
-        data=json.load(file)
-    for i in range(0,len(regs['Registros'])):
-        if (i+1)%60==0:
+    iat = list(iata_registration().items())
+    cache = get_cache(reset=True)
+    with open(json_cache, 'r') as file:
+        data = json.load(file)
+    for i in range(0, len(iat)):
+        print(i)
+        if (i + 1) % 60 == 0:
             print("Actualizando")
             time.sleep(60)
-        data['Registros'][str(regs['Registros'][i][0])]=[]
-        wter=Weather.WeatherApi.GetWeatherArray(regs['Registros'][i][1], regs['Registros'][i][2], apikey)
-        if isinstance(wter,list)==False:
+        data['records'][iat[i][0]] = []
+        wter = Weather.WeatherApi.GetWeatherArray(iat[i][1][0],
+                                                  iat[i][1][1], apikey)
+        if not isinstance(wter, list):
             print("Error al llamar a la API")
             break
-        for k in range(24):
+        for k in range(23):
             try:
-                data['Registros'][str(regs['Registros'][i][0])].append([wter[k].climate,wter[k].temp_min,wter[k].temp_max,wter[k].humidity,wter[k].hour])
+                data['records'][iat[i][0]].append(
+                    [wter[k].climate, wter[k].temp_min, wter[k].temp_max, wter[k].humidity, wter[k].hour])
             except AttributeError:
-                data['Registros'][str(regs['Registros'][i][0])].append(['NULL','NULL','NULL','NULL','NULL'])
-        with open(json_cache,'w') as file:
-            json.dump(data,file)
-    print("Cache actualizado:", Bandera['Bandera'])
+                data['records'][iat[i][0]].append(['NULL', 'NULL', 'NULL', 'NULL', 'NULL'])
+        with open(json_cache, 'w') as file:
+            json.dump(data, file)
+    print("Cache actualizado:", cache['flag'])
     timer_runs.clear()
-    Temporizador()
+    timer()
     return None
 
-def ActualizarCache():
-    '''Función que ejecuta el subproceso Cachear()
+
+def update_cache():
+    '''Función que ejecuta el subproceso cacher()
         Emplea las variables globales:
             act: Event
 
@@ -188,10 +193,11 @@ def ActualizarCache():
         No
     '''
     global act
-    act = threading.Thread(target=Cachear)
+    act = threading.Thread(target=cacher)
     act.start()
 
-def IniciarCache():
+
+def run_cache():
     '''Función que inicializa el proceso de cacheado de inicio del programa
         Evita conflictos al abrir y cerrar el programa
         Emplea las variables globales:
@@ -203,25 +209,16 @@ def IniciarCache():
         No
     '''
     act.clear()
-    Bandera=BanderaCache(reiniciar=False)
-    if len(Bandera['Registros'])==0:
-        ActualizarCache()
+    cache = get_cache(reset=False)
+    if len(cache['records']) == 0:
+        update_cache()
     else:
-        Temporizador()
+        timer()
     return None
 
 
 if __name__ == '__main__':
     '''IMPORTANTE: Todos los print() deben ser reemplazados por ventanas emergentes en la GUI NO PUEDEN HABER PRINTS
     '''
-    #Esto es una prueba del funcionamiento SOLO LA PRIMERA LINEA ES ESCENCIAL
-    IniciarCache()
-    '''
-    Bandera=BanderaCache(reiniciar=False)
-    print(len(Bandera['Registros']))
-    print(" ")
-    print("Este mesaje no deberia esperar")
-    time.sleep(2)
-    print("Esto se corre de manera simultanea")
-    print("UWU")
-    '''
+    # Esto es una prueba del funcionamiento SOLO LA PRIMERA LINEA ES ESCENCIAL
+    run_cache()
