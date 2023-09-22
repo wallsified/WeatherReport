@@ -45,14 +45,12 @@ def get_cache(*, reset: bool = False):
         try:
             with open(json_cache, 'r') as file:
                 json_data = json.load(file)
-                print('Caché habil')
                 check_cache(json_data)
         except(FileNotFoundError, json.JSONDecodeError) as e:
             print(f'Cache no encontrado..({e})')
             json_data = None
     if not json_data:
         json_data = {'flag': str(datetime.datetime.now()), 'records': {}}
-        print('Se creó el cache')
         with open(json_cache, 'w') as file:
             json.dump(json_data, file)
     return json_data
@@ -72,8 +70,6 @@ def check_cache(cache: dict):
     actual_date = datetime.datetime.now()
     if (actual_date - date_cache) >= datetime.timedelta(hours=3):
         update_cache()
-    else:
-        print("Cache actualizado")
 
 
 def timer():
@@ -103,7 +99,6 @@ def analyzer(timer_runs):
         No
     '''
     while timer_runs.is_set():
-        print("Corre el tiempo")
         time.sleep(10800)
         cache = get_cache(reset=False)
         check_cache(cache)
@@ -160,7 +155,6 @@ def cacher():
     for i in range(0, len(iat)):
         print(i)
         if (i + 1) % 60 == 0:
-            print("Actualizando")
             time.sleep(60)
         data['records'][iat[i][0]] = []
         wter = Weather.WeatherApi.GetWeatherArray(iat[i][1][0],
@@ -176,7 +170,6 @@ def cacher():
                 data['records'][iat[i][0]].append(['NULL', 'NULL', 'NULL', 'NULL', 'NULL'])
         with open(json_cache, 'w') as file:
             json.dump(data, file)
-    print("Cache actualizado:", cache['flag'])
     timer_runs.clear()
     timer()
     return None
