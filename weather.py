@@ -17,7 +17,6 @@ def weather_request(lat, long):
                 "units": "metric"
                 }
             )
-    print(data.url)
 
     return data.json()
 
