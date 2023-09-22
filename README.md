@@ -5,7 +5,7 @@
 | Alumnos                     | No. de Cuenta |
 | --------------------------- | ------------- |
 | Edgar José Reyes Montelongo | 319023275     |  
-| González Tamariz Santiago   |               |
+| González Tamariz Santiago   | 423051416     |
 | Paredes Zamudio Luis Daniel | 318159926     |
 | Salgado Razo Jonatán        | 417091901     |
 
@@ -13,7 +13,8 @@
 
 ## Dependencias
 
-- 
+- Flet
+- Requests
 
 <br>
 
@@ -22,7 +23,8 @@
 En la carpeta del proyecto se abre la terminal y se ejecutan los siguientes comandos:
 
 ```
-
+pipenv install
+pipenv shell flet main.py
 ```
 
 
