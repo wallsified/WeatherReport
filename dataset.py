@@ -20,7 +20,7 @@ class DatasetManager():
 
             return False
 
-        self.valid_names = filter(valid_name, self.names_list)
+        self.valid_names = list(filter(valid_name, self.names_list))
 
 
     def read_tickets(self):
