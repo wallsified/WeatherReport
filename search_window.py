@@ -29,6 +29,8 @@ search_initation.icon = ft.icons.SEARCH
 search_initation.width = 320
 search_initation.height = 50
 
+headers = gc.table_headers()
+
 # Propiedades del Botón para limpiar los resultados previos.
 clean_button = gc.new_elevated_button()
 clean_button.text = "Limpiar Resultados"
@@ -48,7 +50,7 @@ top_row = ft.ResponsiveRow(
     run_spacing={"sm": 30},
 )
 
-second_row = ft.ResponsiveRow([gc.table_headers], run_spacing={"sm": 30})
+second_row = ft.ResponsiveRow([headers], run_spacing={"sm": 30})
 
 lista_de_listas = [
     [1, 2, 3, 4, 5, 6, 7, 8],
@@ -73,19 +75,12 @@ def main(page: ft.Page):
     page.auto_scroll = True
     page.window_focused = True
     page.window_full_screen = False
-
-    def textbox_changed(event):
-        search_query.value = f"{search_title_button.value}"
-        page.update()
-
-    search_query = ft.Text()
-    search_initation.on_click= textbox_changed
     
     cache.run_cache()
 
-    def items():
+    def items(value):
         data_table = gc.new_grid_view()
-        for i, sublista in enumerate(lista_de_listas):
+        for i, sublista in enumerate(searcher.search_cache(value)):
             for data in sublista:
                 data_table.controls.append(
                     ft.Container(
@@ -101,26 +96,20 @@ def main(page: ft.Page):
         page.update()
         return data_table
 
+    grid = items("MTY")
+    
     def load_results(event):
-        value = search_query.value
-        # quiero ver primero como se visualiza el puro resultado y de ahi 
-        # empezar a entender lo demás pero no me deja.
-        data = ft.Text(searcher.search_cache(value))
-        page.add(gc.table_headers, data, clean_button)
+        page.add(second_row, grid, clean_button)
         page.update()
 
     def clean_table(event):
-        page.remove(gc.table_headers, clean_button)
+        page.remove(second_row, grid, clean_button)
         page.update()
 
     clean_button.on_click = clean_table
-
-    result_button = ft.ElevatedButton(
-        text= "Resultados",
-        on_click= load_results,
-    )
-
-    page.add(top_row, result_button)
+    search_initation.on_click = load_results
+    
+    page.add(top_row)
 
 ft.app(
     target=main,
