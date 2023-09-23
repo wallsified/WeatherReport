@@ -39,7 +39,7 @@ def ticket_management():
     return reg
 
 
-def take_from_cache(regs: dict = {}, cach: dict = {}, origin: str = '', destination: str = ''):
+def take_from_cache(regs: dict, cach: dict, origin: str = '', destination: str = ''):
     '''Función que genera una lista con los datos necesarios para mostrar en los registros de la busqueda
 
         Toma los registros del dataset y el cache de la api para conglomerar los climas con cada origen y destino
