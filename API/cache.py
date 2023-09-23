@@ -10,7 +10,7 @@ import threading
 import time
 
 # Se importan las clases del documento Weather.py
-import Weather
+import weather
 
 # Variables globales para el uso de procesos y subprocesos internos
 act_runs = threading.Event()
@@ -156,7 +156,7 @@ def cacher():
         if (i + 1) % 60 == 0:
             time.sleep(60)
         data['records'][iat[i][0]] = []
-        wter = Weather.WeatherApi.GetWeatherArray(iat[i][1][0],
+        wter = weather.WeatherApi.GetWeatherArray(iat[i][1][0],
                                                   iat[i][1][1], apikey)
         if not isinstance(wter, list):
             print("Error al llamar a la API")
