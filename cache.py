@@ -13,7 +13,7 @@ import time
 import Weather
 
 # Variables globales para el uso de procesos y subprocesos internos
-act = threading.Event()
+act_runs = threading.Event()
 timer_runs = threading.Event()
 # Llaves, nombre del archivo caché y del dataset empleado, respectivamente
 apikey = 'INCERTE APLIKEY VALIDA'
@@ -153,7 +153,6 @@ def cacher():
     with open(json_cache, 'r') as file:
         data = json.load(file)
     for i in range(0, len(iat)):
-        print(i)
         if (i + 1) % 60 == 0:
             time.sleep(60)
         data['records'][iat[i][0]] = []
@@ -171,6 +170,7 @@ def cacher():
         with open(json_cache, 'w') as file:
             json.dump(data, file)
     timer_runs.clear()
+    act_runs.clear()
     timer()
     return None
 
@@ -178,14 +178,14 @@ def cacher():
 def update_cache():
     '''Función que ejecuta el subproceso cacher()
         Emplea las variables globales:
-            act: Event
+            act_runs: Event
 
     Parametros:
         No
     Reorno:
         No
     '''
-    global act
+    act_runs.set()
     act = threading.Thread(target=cacher)
     act.start()
 
@@ -194,14 +194,14 @@ def run_cache():
     '''Función que inicializa el proceso de cacheado de inicio del programa
         Evita conflictos al abrir y cerrar el programa
         Emplea las variables globales:
-            act: Event
+            act_runs: Event
 
     Parametros:
         No
     Reorno:
         No
     '''
-    act.clear()
+    act_runs.clear()
     cache = get_cache(reset=False)
     if len(cache['records']) == 0:
         update_cache()
