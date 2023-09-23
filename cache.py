@@ -161,7 +161,7 @@ def cacher():
         if not isinstance(wter, list):
             print("Error al llamar a la API")
             break
-        for k in range(23):
+        for k in range(24):
             try:
                 data['records'][iat[i][0]].append(
                     [wter[k].climate, wter[k].temp_min, wter[k].temp_max, wter[k].humidity, wter[k].hour])
