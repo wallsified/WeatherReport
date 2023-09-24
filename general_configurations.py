@@ -86,7 +86,7 @@ def new_text_field():
         max_lines="1",
         multiline=False,
         disabled=False,
-        capitalization=ft.TextCapitalization.WORDS,
+        #capitalization=ft.TextCapitalization.WORDS,
         filled=True,
     )
 

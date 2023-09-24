@@ -33,7 +33,8 @@ def ticket_management():
             for row in data:
                 reg[row['num_ticket']] = [row['origin'], row['destination']]
     except FileNotFoundError:
-        print("No se encontro: "+dts)
+        #print("No se encontro: "+dts)
+        pass
     return reg
 
 
@@ -93,7 +94,7 @@ def search_cache(txt: str = ''):
             Manda una lista de listas con el formato del método take_from_cache()
     '''
     while cache.act_runs.is_set():
-        print("wait")
+        #print("wait")
         time.sleep(1)
     regs = cache.iata_registration()
     tickets = ticket_management()

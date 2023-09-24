@@ -1,12 +1,7 @@
 """
 Ventana de Búsqueda del clima 
 Author:  @wallsified
-Version: 1.1
-
-Nota: Flet se puede manejar a nivel ventana como una matriz 
-con elementos 'Column' y 'Row', por lo que diversas
-instancias de dichos elementos y derivados cumplen con
-ser la construcción de la ventana. 
+Version: 1.2
 """
 
 import flet as ft
@@ -52,14 +47,6 @@ top_row = ft.ResponsiveRow(
 
 second_row = ft.ResponsiveRow([headers], run_spacing={"sm": 30})
 
-lista_de_listas = [
-    [1, 2, 3, 4, 5, 6, 7, 8],
-    ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'],
-    [True, False, True, False, True, False, True, False],
-    [10, 20, 30, 40, 50, 60, 70, 80],
-    ['x', 'y', 'z', 'w', 'v', 'u', 't', 's']
-]
-
 def main(page: ft.Page):
     """
     Método Main para poder ejecutar la Ventana Principal
@@ -75,12 +62,26 @@ def main(page: ft.Page):
     page.auto_scroll = True
     page.window_focused = True
     page.window_full_screen = False
+
+
+    def button_clicked(event):
+        query.value = f"{search_title_button.value}"
+        result_grid = items(query.value)
+        page.add(second_row, result_grid, clean_button)
+        search_initation.disabled = True
+        search_title_button.disabled = True
+        page.update()
     
-    cache.run_cache()
+    def clean_table(event):
+        search_initation.disabled = False
+        search_title_button.disabled = False
+        page.remove(second_row, clean_button) #y en teoria la información...
+        page.update()
+        
 
     def items(value):
         data_table = gc.new_grid_view()
-        for i, sublista in enumerate(searcher.search_cache(value)):
+        for index, sublista in enumerate(searcher.search_cache(value)):
             for data in sublista:
                 data_table.controls.append(
                     ft.Container(
@@ -96,19 +97,11 @@ def main(page: ft.Page):
         page.update()
         return data_table
 
-    grid = items("MTY")
-    
-    def load_results(event):
-        page.add(second_row, grid, clean_button)
-        page.update()
 
-    def clean_table(event):
-        page.remove(second_row, grid, clean_button)
-        page.update()
-
+    cache.run_cache()
+    query = ft.Text()
+    search_initation.on_click = button_clicked
     clean_button.on_click = clean_table
-    search_initation.on_click = load_results
-    
     page.add(top_row)
 
 ft.app(

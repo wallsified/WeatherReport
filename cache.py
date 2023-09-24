@@ -47,7 +47,7 @@ def get_cache(*, reset: bool = False):
                 json_data = json.load(file)
                 check_cache(json_data)
         except(FileNotFoundError, json.JSONDecodeError) as e:
-            print(f'Cache no encontrado..({e})')
+            #print(f'Cache no encontrado..({e})')
             json_data = None
     if not json_data:
         json_data = {'flag': str(datetime.datetime.now()), 'records': {}}
@@ -131,9 +131,11 @@ def iata_registration():
                         regs[row['destination']].append(float(row['destination_latitude']))
                         regs[row['destination']].append(float(row['destination_longitude']))
                 except ValueError:
-                    print("Error en valores")
+                    #print("Error en valores")
+                    pass
     except FileNotFoundError:
-        print("No se encontró " + dataset)
+        #print("No se encontró " + dataset)
+        pass
     return regs
 
 
@@ -159,7 +161,7 @@ def cacher():
         wter = weather.WeatherApi.get_weather_array(iat[i][1][0],
                                                   iat[i][1][1], apikey)
         if not isinstance(wter, list):
-            print("Error al llamar a la API")
+            #print("Error al llamar a la API")
             break
         for k in range(24):
             try:
@@ -211,7 +213,5 @@ def run_cache():
 
 
 if __name__ == '__main__':
-    '''IMPORTANTE: Todos los print() deben ser reemplazados por ventanas emergentes en la GUI NO PUEDEN HABER PRINTS
-    '''
     # Esto es una prueba del funcionamiento SOLO LA PRIMERA LINEA ES ESCENCIAL
     run_cache()
