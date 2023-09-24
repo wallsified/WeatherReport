@@ -19,6 +19,7 @@ Para instalar las dependecias se hace lo siguiente:
  pip install python-Levenshtein
  pip install flet
  pip install pyinstaller
+ pip install requests
 ```
 
 ## Ejecución del Programa
@@ -50,6 +51,7 @@ Nos hacen falta los datos del clima, los cuales obtendremos mediante un webservi
 Se eligió Python como lenguaje de programación debido a su facilidad de comprender y mantener, y su característica de ser multiparadigma. Se usará la API de OpenWeather debido a su gran cantidad de datos disponibles. 
 
 Los datos se procesaran en formato csv/json para su fácil comprensión.
+
 <br>
 
 Se obtendrá la entrada del usuario la cuál podrá ser un no. de ticket, iata o nombre de ciudad - aeropuerto. Una vez obtenido eso se obtendrán las coordenadas del lugar correspondiente para poder obtener el clima del lugar.
@@ -60,11 +62,8 @@ lugar se checará primero el cache para evitar llamar a la api (que aparte de se
 
 <br>
 
-Una vez obtenido esto, se mostraran los datos de manera amigable, usando una interfaz gráfica
-que cuenta con el estilo material ui de google al cuál muchos usuarios ya deberían de estar
-familiarizados.
+Una vez obtenido esto, se mostraran los datos de manera amigable, usando una interfaz gráfica que cuenta con el Material Design de Google al cuál muchos usuarios ya deberían de estar familiarizados.
 
-## Notas
 
 <!-- flet pack search_window.py --name WeatherReporter --icon Assets/images/plane.png -->
 <!-- search_window es temporalmente el main.py -->
