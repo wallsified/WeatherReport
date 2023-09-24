@@ -1,13 +1,16 @@
 """
-Ventana de Búsqueda del clima 
+Ventana de la Búsqueda del Clima 
 Author:  @wallsified
 Version: 1.2
 """
-
+# Libreria Gráfica Principal
 import flet as ft
+# Archivo de Configuraciones Gráficas personlizadas
 import general_configurations as gc
-import cache
-import searcher
+# Archivo de Caché
+from cache import run_cache
+# Archivo de Búsqueda en el Caché
+from searcher import search_cache
 
 # Propiedades del botón de entrada de texto para la búsqueda
 search_title_button = gc.new_text_field()
@@ -24,6 +27,7 @@ search_initation.icon = ft.icons.SEARCH
 search_initation.width = 320
 search_initation.height = 50
 
+# Encabezados para mostrar los resultados
 headers = gc.table_headers()
 
 # Propiedades del Botón para limpiar los resultados previos.
@@ -37,6 +41,7 @@ ft.Page.fonts = {
     "Caviar": "fonts/CaviarDreams.ttf"
 }
 
+# Fila para mostrar los dos botones principales de control
 top_row = ft.ResponsiveRow(
     [
         ft.Column(col={"sm": 6}, controls=[search_title_button]),
@@ -45,7 +50,11 @@ top_row = ft.ResponsiveRow(
     run_spacing={"sm": 30},
 )
 
+# Fila para mostrar los encabezados de los resultados de búsqueda
 second_row = ft.ResponsiveRow([headers], run_spacing={"sm": 30})
+
+# Objeto GridView para mostrar los resultados
+result_grid = gc.new_grid_view()
 
 def main(page: ft.Page):
     """
@@ -65,25 +74,35 @@ def main(page: ft.Page):
 
 
     def button_clicked(event):
+        """
+        Método secuenciador para iniciar la búsqueda.
+        """
+        page.remove(result_grid)
         query.value = f"{search_title_button.value}"
-        result_grid = items(query.value)
+        items(query.value)
         page.add(second_row, result_grid, clean_button)
         search_initation.disabled = True
         search_title_button.disabled = True
         page.update()
-    
+
     def clean_table(event):
+        """
+        Método para limpiar búsquedas previas.
+        """
         search_initation.disabled = False
         search_title_button.disabled = False
-        page.remove(second_row, clean_button) #y en teoria la información...
+        page.remove(second_row, result_grid, clean_button)
+        result_grid.controls = []
+        page.add(result_grid)
         page.update()
-        
 
     def items(value):
-        data_table = gc.new_grid_view()
-        for index, sublista in enumerate(searcher.search_cache(value)):
+        """
+        Método para crear Contenedores de los resultados de la búsqueda
+        """
+        for index, sublista in enumerate(search_cache(value)):
             for data in sublista:
-                data_table.controls.append(
+                result_grid.controls.append(
                     ft.Container(
                         ft.Text(value=data, font_family='Caviar'),
                         alignment=ft.alignment.center,
@@ -95,14 +114,12 @@ def main(page: ft.Page):
                     )
                 )
         page.update()
-        return data_table
 
-
-    cache.run_cache()
-    query = ft.Text()
+    run_cache()
+    query = ft.Text() # Objeto de Texto usado para refenciar el valor de búsqueda.
     search_initation.on_click = button_clicked
     clean_button.on_click = clean_table
-    page.add(top_row)
+    page.add(top_row, result_grid)
 
 ft.app(
     target=main,

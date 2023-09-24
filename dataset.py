@@ -1,7 +1,31 @@
+"""
+Archivo de Gestión del DataSet
+
+Author @Santi24Yt
+Version 1.0
+
+"""
+
 import csv
 import cache
 
 class DatasetManager():
+
+    """
+    Clase de Manejo del Dataset
+    
+    Métodos
+    ------
+        *__init__ : Iniciación de la clase.
+        * read_tickets : Lectura de Tickets del dataset
+        * read_names: Lectura la base de Datos de IATA Codes
+        * get_coords: Obtención de Coordenadas
+        * get_iatas: Obtención de códigos IATA
+        * is_valid_iata: Verificación de Códigos IATA 
+        * get_names_lista: Obtención de Lista de Nombres
+        * get_iata: Obtención de Código IATA
+        * get_valid_names_list: Obtención de Lista de Códigos IATA válidos.
+    """
 
     def __init__(self):
         self.coords = dict()
@@ -25,7 +49,10 @@ class DatasetManager():
 
 
     def read_tickets(self):
-        file = open(cache.dataset)
+        """
+        Lectura de Tickets del dataset
+        """
+        file = open(file= cache.DATA_SET, encoding= "utf-8")
         reader = csv.reader(file)
 
         i = 0
@@ -52,7 +79,10 @@ class DatasetManager():
         file.close()
 
     def read_names(self):
-        file = open("name-iata.csv")
+        """
+        Lectura la base de Datos de IATA Codes
+        """
+        file = open(file = "name-iata.csv", encoding= "utf-8")
         reader = csv.reader(file)
 
         i = 0
@@ -72,22 +102,66 @@ class DatasetManager():
         file.close()
 
     def get_coords(self, iata):
+        """
+        Obtención de Coordenadas por Código IATa
+        
+        Regresa
+        -------
+        Coordenadas
+        """
         return self.coords.get(iata)
 
     def get_iatas(self, ticket):
+        """
+        Obtención de códigos IATA por Ticket
+        
+        Regresa
+        -------
+        Codigo IATA de un Ticket
+
+        """
         return self.iatas.get(ticket)
 
     def is_valid_iata(self, iata):
+        """
+        Verificación de Códigos IATA 
+        
+        Regresa
+        ------
+        True: El IATA es válido
+        False: Caso Contrario
+        """
         if self.coords.get(iata):
             return True
         else:
             return False
 
     def get_names_list(self):
+        """
+        Obtención de Lista de Nombres
+        
+        Regresa
+        -------
+        Lista de Nombres
+        """
         return self.names_list
 
     def get_iata(self, name):
+        """
+        Obtención de Código IATA
+        
+        Regresa
+        -------
+        Código IATA
+        """
         return self.names.get(name)
 
     def get_valid_names_list(self):
+        """
+        Obtención de Lista de Códigos IATA válidos.
+        
+        Regreso
+        ------
+        Lista de Códigos IATA válidos.
+        """
         return self.valid_names

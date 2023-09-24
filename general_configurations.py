@@ -1,7 +1,7 @@
 """
 Configuraciones Principales de la GUI.
 Author:  @wallsified
-Version: 1.0
+Version: 1.1
 
 Notas:
 Flet permite cambiar parámetros de cada elemento gráfico a posteriori, pero
@@ -190,14 +190,3 @@ def table_headers():
             ),
         ],
     )
-
-def new_alert():
-    """test de alerta """
-    return ft.AlertDialog(
-        modal= True,
-        actions=[
-                ft.TextButton(text="Entendido")
-            ],
-        actions_alignment=ft.MainAxisAlignment.END,
-        on_dismiss=lambda e: print(" "),
-        )

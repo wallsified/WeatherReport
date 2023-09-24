@@ -1,3 +1,11 @@
+"""
+Archivo de Manejo y Gestión del Caché
+
+Author: @TheSinotec
+Version 1.0
+
+"""
+
 # Libreria para lectura del dataset *.csv
 import csv
 # Libreria para la lectura y escritura del caché *.json
@@ -8,63 +16,69 @@ import datetime
 import threading
 # Libreria para generar espacios de tiempo de ejecución
 import time
-
 # Se importan las clases del documento Weather.py
 import weather
 
 # Variables globales para el uso de procesos y subprocesos internos
 act_runs = threading.Event()
 timer_runs = threading.Event()
+
 # Llaves, nombre del archivo caché y del dataset empleado, respectivamente
-apikey = '5e31a7313683592fc55490ec53637486'
-json_cache = 'cache.json'
-dataset = 'dataset2.csv'
+API_KEY = '5e31a7313683592fc55490ec53637486'
+JSON_CACHE = 'cache.json'
+DATA_SET = 'dataset2.csv'
 
 
 def get_cache(*, reset: bool = False):
-    '''Función que verifica el estado y/o crea el archivo de caché *.json
+    '''
+    Función que verifica el estado y/o crea el archivo de caché *.json
 
-        Reinicia el caché según el parametro reset, además lee y verifica la caducidad del caché en caso de existir un archivo de caché
+    Reinicia el caché según el parametro reset, además lee 
+    y verifica la caducidad del caché en caso de existir un archivo de caché
 
-    Parametros:
-        reset: bool
+    Parametros
+    ----------
+        * reset: bool
             De valor predeterminado False.
             Para True, borra el caché actual y deja un archivo de formato predeterminado.
             Para False, lee el archivo y lo retorna en un diccionario
 
-    Retorna:
-        json_data: dict
+    Retorna
+    -------
+        *json_data: dict
             La lectura de un archivo json en variable dic
                 Formato predeterminado (vacío): {"flag": "fecha:str", "records": {}}
 
-                La clave "records" del diccionario es un diccionario con las IATAS como claves, y cada clave IATA es una lista formada por 24 horas obtenidas de la API. Cada lista de hora contiene una lista con los parámetros [clima:str, temperatura_min:int, temperatura_max:int, humedad: int, hora: int]
+                La clave "records" del diccionario es un diccionario con las IATAS 
+                como claves, y cada clave IATA es una lista formada por 24 horas obtenidas 
+                de la API. Cada lista de hora contiene una lista con los parámetros 
+                [clima:str, temperatura_min:int, temperatura_max:int, humedad: int, hora: int]
     '''
     if reset:
         json_data = None
     else:
         try:
-            with open(json_cache, 'r') as file:
+            with open(file= JSON_CACHE, mode= 'r', encoding= "utf-8") as file:
                 json_data = json.load(file)
                 check_cache(json_data)
         except(FileNotFoundError, json.JSONDecodeError) as e:
-            #print(f'Cache no encontrado..({e})')
             json_data = None
     if not json_data:
         json_data = {'flag': str(datetime.datetime.now()), 'records': {}}
-        with open(json_cache, 'w') as file:
+        with open(file = JSON_CACHE, mode='w', encoding= "utf-8") as file:
             json.dump(json_data, file)
     return json_data
 
 
 def check_cache(cache: dict):
-    '''Verifica que el diccionario-caché tenga a lo más 3 horas de antiguedad, si excede el tiempo, actualiza caché
+    '''
+    Verifica que el diccionario-caché tenga a lo más 3 horas de antiguedad, 
+    si excede el tiempo, actualiza caché.
 
-    Parametros:
-        cache: dict
+    Parametros
+    ----------
+        * cache: dict
             Diccionario del tipo predeterminado de caché
-
-    Retorno:
-        No
     '''
     date_cache = datetime.datetime.strptime(cache['flag'], "%Y-%m-%d %H:%M:%S.%f")
     actual_date = datetime.datetime.now()
@@ -105,20 +119,25 @@ def analyzer(timer_runs):
 
 
 def iata_registration():
-    '''Función que lee el dataset *.csv y regresa los codigos IATA con sus (Latitud, Longitud) correspoindientes
+    '''
+    Función que lee el dataset *.csv y regresa los codigos IATA con sus 
+    (Latitud, Longitud) correspoindientes
+    
+    Almacena los IATA code junto con sus latitudes y longitudes (sea de 
+    llegada o salida) sin repetir entradas del data set.
+    
+    Usa la variable Global dataset: str, que es el nombre del archivo csv
 
-        Almacena los IATA code junto con sus latitudes y longitudes (sea de llegada o salida) sin repetir entradas del data set.
-        Usa la variable Global dataset: str, que es el nombre del archivo csv
-
-    Parametros:
-        No
-    Retorno:
-        regs: dict
-            Diccionario que contiene {'IATA0:str': [Lat0:float, Lon0:float],'IATA1:str': [Lat1:float, Lon1:float],...]} según lo obtenido en el dataset
+    Retorno
+    -------
+        * regs: dict
+            Diccionario que contiene {'IATA0:str': [Lat0:float, Lon0:float],
+            'IATA1:str': [Lat1:float, Lon1:float],...]} según lo obtenido 
+            en el dataset
     '''
     regs = {}
     try:
-        with open(dataset, newline='') as file:
+        with open(file= DATA_SET, newline='', encoding= "utf-8") as file:
             data = csv.DictReader(file)
             for row in data:
                 try:
@@ -140,36 +159,37 @@ def iata_registration():
 
 
 def cacher():
-    '''Si se llama la función update_cache() se actualiza en segundo plano el contenido del archivo *.json
+    '''
+    Si se llama la función update_cache() se actualiza 
+    en segundo plano el contenido del archivo *.json
 
-        Reinicia el caché actual y usa los registros no redundantes de iata_registration() para hacer un diccionario/archivo *.json. Se llama a la API para cada IATA segun sus coordenadas usando la libreria Weather.py. Además que se ejecuta en segundo plano mientras actualiza y evita más de 60 llamadas por minuto.
-
-    Parametros:
-        No
-
-    Retorno:
-        No
+    Reinicia el caché actual y usa los registros no redundantes 
+    de iata_registration() para hacer un diccionario/archivo *.json. 
+    Se llama a la API para cada IATA segun sus coordenadas usando la 
+    libreria Weather.py. Además que se ejecuta en segundo plano mientras 
+    actualiza y evita más de 60 llamadas por minuto.
+    
     '''
     iat = list(iata_registration().items())
     cache = get_cache(reset=True)
-    with open(json_cache, 'r') as file:
+    with open(file= JSON_CACHE, mode= 'r', encoding= "utf-8") as file:
         data = json.load(file)
     for i in range(0, len(iat)):
         if (i + 1) % 60 == 0:
             time.sleep(60)
         data['records'][iat[i][0]] = []
         wter = weather.WeatherApi.get_weather_array(iat[i][1][0],
-                                                  iat[i][1][1], apikey)
+                                                  iat[i][1][1], API_KEY)
         if not isinstance(wter, list):
-            #print("Error al llamar a la API")
             break
         for k in range(24):
             try:
                 data['records'][iat[i][0]].append(
-                    [wter[k].climate, wter[k].temp_min, wter[k].temp_max, wter[k].humidity, wter[k].hour])
+                    [wter[k].climate, wter[k].temp_min, wter[k].temp_max, wter[k].humidity,
+                     wter[k].hour])
             except AttributeError:
                 data['records'][iat[i][0]].append(['NULL', 'NULL', 'NULL', 'NULL', 'NULL'])
-        with open(json_cache, 'w') as file:
+        with open(file = JSON_CACHE, mode = 'w', encoding= "utf8") as file:
             json.dump(data, file)
     timer_runs.clear()
     act_runs.clear()
@@ -178,14 +198,10 @@ def cacher():
 
 
 def update_cache():
-    '''Función que ejecuta el subproceso cacher()
-        Emplea las variables globales:
-            act_runs: Event
-
-    Parametros:
-        No
-    Reorno:
-        No
+    '''
+    Función que ejecuta el subproceso cacher()
+    Emplea las variables globales:
+        * act_runs: Event
     '''
     act_runs.set()
     act = threading.Thread(target=cacher)
@@ -193,15 +209,11 @@ def update_cache():
 
 
 def run_cache():
-    '''Función que inicializa el proceso de cacheado de inicio del programa
-        Evita conflictos al abrir y cerrar el programa
-        Emplea las variables globales:
-            act_runs: Event
-
-    Parametros:
-        No
-    Reorno:
-        No
+    '''
+    Función que inicializa el proceso de cacheado de inicio del programa
+    Evita conflictos al abrir y cerrar el programa
+    Emplea las variables globales:
+        * act_runs: Event
     '''
     act_runs.clear()
     cache = get_cache(reset=False)

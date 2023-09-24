@@ -56,7 +56,7 @@ class WeatherApi:
     * __call_api(lat,lon,key): Método que maneja las llamadas a API.
     
     '''
-    
+
     def __init__(self):
         pass
 
@@ -126,7 +126,8 @@ class WeatherApi:
  
         Regresa
         -------
-            * climate(Weather[]):Un array de Weather[], a excepcion de los None[] de las horas pasadas
+            * climate(Weather[]):Un array de Weather[], a excepcion de los None[] 
+            de las horas pasadas
         
         '''
         try:

@@ -1,3 +1,13 @@
+"""
+Archivo que implementa el Algoritmo
+de Levenstein para poder buscar en 
+el caché
+
+Author: @TheSinotec
+Version: 1.0
+
+"""
+
 # Libreria para lectura del dataset *.csv
 import csv
 # Libreria para manejo de fecha y hora del computador
@@ -12,89 +22,105 @@ import cache
 from dataset import DatasetManager
 
 # Variable global, nombre del dataset definido en el cache
-dts = cache.dataset
+DTS = cache.DATA_SET
 
 
 def ticket_management():
-    '''Función que genera un diccionario con los tickets y los iatas asociados en lista [origin, destination] según el dataset
+    '''
+    Función que genera un diccionario con los tickets y 
+    los iatas asociados en lista [origin, destination] según el dataset
 
-    Parametros:
-        No
-
-    Retorna:
-        reg: dict
+    Retorna
+    -------
+        *reg: dict
             La lectura del dataset
-                Formato predeterminado: {"num_ticket0": ["iata_origin0", "iata_destination0"],"num_ticket1": ["iata_origin1", "iata_destination1"],...}
+            Formato predeterminado: {"num_ticket0": ["iata_origin0", "iata_destination0"]
+            ,"num_ticket1": ["iata_origin1", "iata_destination1"],...}
     '''
     reg = {}
     try:
-        with open(dts, newline='') as file:
+        with open(file= DTS, newline='', encoding= "utf-8") as file:
             data = csv.DictReader(file)
             for row in data:
                 reg[row['num_ticket']] = [row['origin'], row['destination']]
     except FileNotFoundError:
-        #print("No se encontro: "+dts)
         pass
     return reg
 
 
 def take_from_cache(regs: dict, cach: dict, origin: str = '', destination: str = ''):
-    '''Función que genera una lista con los datos necesarios para mostrar en los registros de la busqueda
+    '''
+    Función que genera una lista con los datos 
+    necesarios para mostrar en los registros de la busqueda
 
-        Toma los registros del dataset y el cache de la api para conglomerar los climas con cada origen y destino
+    Toma los registros del dataset y el cache de la API para
+    conglomerar los climas con cada origen y destino
 
     Parametros:
-        regs: dict
+        *regs: dict
             De valor predeterminado {}.
-            Recibe la lectura del dataset según el retorno de la función iata_registration() del cache, si no, manda registros Null (error en el diccionario)
-        cach: dict
+            Recibe la lectura del dataset según el retorno de la 
+            función iata_registration() del cache, si no, manda 
+            registros Null (error en el diccionario)
+        *cach: dict
             De valor predeterminado {}.
-            Recibe la lectura del cache según el retorno de la función get_cache(reset=False) del cache, si no, manda registros Null (error en el diccionario)
-        origin: str
+            Recibe la lectura del cache según el retorno de la función
+            get_cache(reset=False) del cache, si no, manda registros Null 
+            (error en el diccionario)
+        *origin: str
             De valor predeterminado ''.
             Recibe un código IATA origin, si no, manda registros Null (error en el IATA)
-        destination: str
+        *destination: str
             De valor predeterminado ''.
             Recibe un código IATA destination, si no, manda registros Null (error en el IATA)
 
-    Retorna:
-        datalist: list
-            Manda una lista de formato [iata_origin:str, lat_origin:float, lon_origin:float, weather_origin:str, iata_destination:str, lat_destination:float, lon_destination:float, weather_destination:str]
+    Retorna
+    -------
+        *datalist: list
+            Manda una lista de formato [iata_origin:str, lat_origin:float, 
+            lon_origin:float, weather_origin:str, iata_destination:str, 
+            lat_destination:float, lon_destination:float, weather_destination:str]
     '''
     datalist = []
-    hr = datetime.datetime.now().hour
+    hour = datetime.datetime.now().hour
     if cach == regs or origin == destination:
         datalist.extend(['Null', 'Null', 'Null', 'Null'])
     else:
-        for i in range(hr, 23):
+        for i in range(hour, 23):
             if cach['records'][origin][i] != ['NULL', 'NULL', 'NULL', 'NULL', 'NULL']:
-                hr = i
+                hour = i
                 break
         datalist.extend([origin, regs[origin][0], regs[origin][1],
-                         cach['records'][origin][hr][0]])
-        if hr < 22:
+                         cach['records'][origin][hour][0]])
+        if hour < 22:
             datalist.extend([destination, regs[destination][0], regs[destination][1],
-                             cach['records'][destination][hr + 2][0]])
+                             cach['records'][destination][hour + 2][0]])
         else:
             datalist.extend(['Null', 'Null', 'Null', 'Null'])
     return datalist
 
 
 def search_cache(txt: str = ''):
-    '''Función que genera una lista de listas del formato de la función take_from_cache() según un texto de busqueda
+    '''
+    Función que genera una lista de listas del formato de la 
+    función take_from_cache() según un texto de busqueda
 
-        Toma un string buscado y genera una busqueda por iata, por ticket o por el método levenshtein, regresa una lista de listas con todas las busquedas coincidentes. En caso que el caché no se haya generado espera a que este termine de procesar.
+    Toma un string buscado y genera una busqueda por iata, por 
+    ticket o por el método levenshtein, regresa una lista de listas 
+    con todas las busquedas coincidentes. En caso que el caché no se 
+    haya generado espera a que este termine de procesar.
 
-    Parametros:
-        txt: str
+    Parametros
+    ----------
+        *txt: str
             De valor predeterminado ''.
 
-    Retorna:
-        result: list
+    Retorna
+    -------
+        *result: list
             Manda una lista de listas con el formato del método take_from_cache()
     '''
     while cache.act_runs.is_set():
-        #print("wait")
         time.sleep(1)
     regs = cache.iata_registration()
     tickets = ticket_management()
@@ -115,14 +141,10 @@ def search_cache(txt: str = ''):
     else:
         mngr = DatasetManager()
         valid_names = mngr.get_valid_names_list()
-        names_sorted = sorted(valid_names, key = lambda n: distance(txt.lower(), n.lower(), weights=(1, 2, 3)))
+        names_sorted = sorted(valid_names, key = lambda n: distance(txt.lower(),
+                                                                    n.lower(), weights=(1, 2, 3)))
         for i in range(3):
             iat = mngr.get_iata(names_sorted[i])
             lst = search_cache(iat)
             result.extend(lst)
     return result
-
-
-if __name__ == '__main__':
-    '''
-    '''
