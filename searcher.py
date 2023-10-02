@@ -4,7 +4,7 @@ de Levenstein para poder buscar en
 el caché
 
 Author: @TheSinotec
-Version: 1.0
+Version: 1.1
 
 """
 
@@ -61,42 +61,45 @@ def take_from_cache(regs: dict, cach: dict, origin: str = '', destination: str =
             De valor predeterminado {}.
             Recibe la lectura del dataset según el retorno de la 
             función iata_registration() del cache, si no, manda 
-            registros Null (error en el diccionario)
+            registros NULL (error en el diccionario)
         *cach: dict
             De valor predeterminado {}.
             Recibe la lectura del cache según el retorno de la función
-            get_cache(reset=False) del cache, si no, manda registros Null 
+            get_cache(reset=False) del cache, si no, manda registros NULL 
             (error en el diccionario)
         *origin: str
             De valor predeterminado ''.
-            Recibe un código IATA origin, si no, manda registros Null (error en el IATA)
+            Recibe un código IATA origin, si no, manda registros NULL (error en el IATA)
         *destination: str
             De valor predeterminado ''.
-            Recibe un código IATA destination, si no, manda registros Null (error en el IATA)
+            Recibe un código IATA destination, si no, manda registros NULL (error en el IATA)
 
     Retorna
     -------
         *datalist: list
             Manda una lista de formato [iata_origin:str, lat_origin:float, 
-            lon_origin:float, weather_origin:str, iata_destination:str, 
-            lat_destination:float, lon_destination:float, weather_destination:str]
+            lon_origin:float, weather_origin:str, range_temperature_origin:str, humidity_origin:str, iata_destination:str, 
+            lat_destination:float, lon_destination:float, weather_destination:str, range_temperature_destination:str, 
+            humidity_destination:str]
     '''
     datalist = []
     hour = datetime.datetime.now().hour
     if cach == regs or origin == destination:
-        datalist.extend(['Null', 'Null', 'Null', 'Null'])
+        datalist.extend(['NULL', 'NULL', 'NULL', 'NULL', 'NULL', 'NULL'])
     else:
-        for i in range(hour, 23):
+        for i in range(hour, 24):
             if cach['records'][origin][i] != ['NULL', 'NULL', 'NULL', 'NULL', 'NULL']:
                 hour = i
                 break
+        tempe = str(cach['records'][origin][hr][1]) + " / " + str(cach['records'][origin][hr][2])
         datalist.extend([origin, regs[origin][0], regs[origin][1],
-                         cach['records'][origin][hour][0]])
+                         cach['records'][origin][hr][0], tempe, cach['records'][origin][hr][3]])
         if hour < 22:
+            tempe = str(cach['records'][origin][hr + 2][1]) + " / " + str(cach['records'][origin][hr + 2][2])
             datalist.extend([destination, regs[destination][0], regs[destination][1],
-                             cach['records'][destination][hour + 2][0]])
+                             cach['records'][destination][hr + 2][0], tempe, cach['records'][origin][hr + 2][3]])
         else:
-            datalist.extend(['Null', 'Null', 'Null', 'Null'])
+            datalist.extend(['NULL', 'NULL', 'NULL', 'NULL', 'NULL', 'NULL'])
     return datalist
 
 
