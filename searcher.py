@@ -91,13 +91,13 @@ def take_from_cache(regs: dict, cach: dict, origin: str = '', destination: str =
             if cach['records'][origin][i] != ['NULL', 'NULL', 'NULL', 'NULL', 'NULL']:
                 hour = i
                 break
-        tempe = str(cach['records'][origin][hr][1]) + " / " + str(cach['records'][origin][hr][2])
+        tempe = str(cach['records'][origin][hour][1]) + " / " + str(cach['records'][origin][hour][2])
         datalist.extend([origin, regs[origin][0], regs[origin][1],
-                         cach['records'][origin][hr][0], tempe, cach['records'][origin][hr][3]])
+                         cach['records'][origin][hour][0], tempe, cach['records'][origin][hour][3]])
         if hour < 22:
-            tempe = str(cach['records'][origin][hr + 2][1]) + " / " + str(cach['records'][origin][hr + 2][2])
+            tempe = str(cach['records'][origin][hour + 2][1]) + " / " + str(cach['records'][origin][hour + 2][2])
             datalist.extend([destination, regs[destination][0], regs[destination][1],
-                             cach['records'][destination][hr + 2][0], tempe, cach['records'][origin][hr + 2][3]])
+                             cach['records'][destination][hour + 2][0], tempe, cach['records'][origin][hour + 2][3]])
         else:
             datalist.extend(['NULL', 'NULL', 'NULL', 'NULL', 'NULL', 'NULL'])
     return datalist
