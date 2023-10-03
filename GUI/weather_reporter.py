@@ -17,12 +17,14 @@ from typing import Final
 # Libería Gráfica
 import flet
 from flet import (
-    border, border_radius, Column, Container,
-    GridView, Page, Row,
+    border, border_radius, Column,
+    Container, GridView, Page, Row,
     SnackBar,Text, TextField,
     UserControl, alignment, icons,
     KeyboardType, ElevatedButton,
-    ButtonStyle, MaterialState, colors
+    ButtonStyle, MaterialState, colors,
+    DataTable, DataColumn, DataRow,
+    DataCell, TextStyle
 )
 
 path_to_module = Path(__file__).parents[1]
@@ -74,7 +76,7 @@ class WeatherSearcher(UserControl):
         gráfica.
 
         """
-
+        # Campo de Búsqueda
         search_txt = TextField(
             expand=1,
             label= "Ingresa tu Búsqueda",
@@ -95,6 +97,8 @@ class WeatherSearcher(UserControl):
         def search_click(event):
             display_icons(search_txt.value)
 
+        # Botón de búsqueda
+        # TODO Corregir estilo.
         search_button = ElevatedButton(
             style= ButtonStyle(
             color={
@@ -114,12 +118,15 @@ class WeatherSearcher(UserControl):
             on_click = search_click
         )
 
+        # Fila de Búsqueda. Campo de Búsqueda + Botón.
         search_query = Row(
             [search_txt, search_button],
             spacing= 10,
             wrap = False
         )
 
+        # Vista de Resultados
+        # ? Es necesario usar esto al añadir un DataTable?
         search_results = GridView(
             expand=1,
             runs_count=10,
@@ -131,14 +138,84 @@ class WeatherSearcher(UserControl):
         )
         status_bar = Text()
 
+        new_search_results = DataTable(
+            border= border.all(1, NAVY_BLUE),
+            border_radius=15,
+            heading_row_height=100,
+            divider_thickness=2,
+            heading_text_style= TextStyle(size=15,
+                                      color=NAVY_BLUE, weight='W_500'),
+            #bgcolor=CLEAR_BLUE,
+            vertical_lines=border.BorderSide(1, NAVY_BLUE),
+            column_spacing=40,
+            width=1500,
+            columns=[
+                        DataColumn(
+                            Text(value= "IATA\nPartida", text_align= 'CENTER'),
+                            tooltip="Identificador IATA del Lugar de Origen"
+                        ),
+                        DataColumn(
+                            Text(value= "Latitud\nPartida",text_align= 'CENTER'),
+                            tooltip="Latitud del Lugar de Origen"
+                        ),
+                        DataColumn(
+                            Text(value= "Longitud\nPartida", text_align= 'CENTER'),
+                            tooltip="Longitud del Lugar de Origen"
+                        ),
+                        DataColumn(
+                            Text("Clima\nPartida"),
+                            tooltip="Clima del Punto de Partida"
+                        ),
+                        DataColumn(
+                            Text(value= "Temperaturas\nMínima / Máxima"),
+                            tooltip= "Temperaturas del Punto de Partida"
+                        ),
+                        DataColumn(
+                            Text(value= "Humedad\nPartida"),
+                            tooltip= "Humedad del Punto de Partida"
+                        ),
+                        DataColumn(
+                            Text(value="IATA\nDestino", text_align= 'CENTER'),
+                            tooltip="Identificador IATA del Lugar de Destino"
+                        ),
+                        DataColumn(
+                            Text(value="Latitud\nDestino", text_align= 'CENTER'),
+                            tooltip="Latitud del Lugar de Destino"
+                        ),
+                        DataColumn(
+                            Text(value="Longitud\nDestino", text_align= 'CENTER'),
+                            tooltip="Longitud del Lugar de Destino"
+                        ),
+                        DataColumn(
+                            Text(value="Clima\nDestino", text_align= 'CENTER'),
+                            tooltip="Clima del Punto de Destino"
+                        ),
+                        DataColumn(
+                            Text(value= "Temperaturas\nMínima / Máxima"),
+                            tooltip= "Temperaturas del Punto de Destino"
+                        ),
+                        DataColumn(
+                            Text(value= "Humedad\nDestino"),
+                            tooltip= "Humedad del Punto de Partida"
+                        ),
+                    ],
+        )
+
         def display_icons(search_term: str):
 
             # clean search results
             search_query.disabled = True
             self.update()
             search_results.clean()
+            weather_results = searcher.search_cache(search_term)
 
-            for index, sublista in enumerate(searcher.search_cache(search_term)):
+            if len(search_term) == 0:
+                search_results.clean()
+                self.page.show_snack_bar(SnackBar(content= Text("Tu búsqueda no arrojó resultados", color= CLOUD_WHITE),
+                    open=True, bgcolor= NAVY_BLUE, duration= 2000, close_icon_color= True, ))
+                weather_results = []
+
+            for index, sublista in enumerate(weather_results):
                 for data in sublista:
                     search_results.controls.append(
                         # ? Posible cambio a un DataTable.
@@ -154,18 +231,13 @@ class WeatherSearcher(UserControl):
                 )
                 self.update()
 
-            # BUG: Aunque si muestra el mensaje, momentaneamente aparecen los falsos positivos.
-            if len(search_results.controls) == 0 or len(search_term) == 0:
-                self.page.show_snack_bar(SnackBar(Text("Tu búsqueda no arrojó resultados"),
-                    open=True))
-                search_results.clean()
-
             search_query.disabled = False
             self.update()
 
         return Column(
             [
                 search_query,
+                new_search_results,
                 search_results,
                 status_bar,
             ],
