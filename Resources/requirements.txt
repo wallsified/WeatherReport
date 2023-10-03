@@ -1,0 +1,8 @@
+python-Levenshtein==0.22.0
+pyinstaller==6.0.0
+pyinstaller-hooks-contrib==2023.9
+flet==0.10.2
+flet-core==0.10.2
+#flet-runtine==0.10.3
+requests==2.31.0
+requests-unixsocket==0.2.0

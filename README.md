@@ -1,4 +1,4 @@
-# Proyecto 01 (Beta): Reporte del Clima para Aeropuertos
+# Proyecto 01 : Reporte del Clima para Aeropuertos
 
 <br>
 
@@ -10,12 +10,16 @@
 | Salgado Razo Jonatán        | 417091901     |
 
 
-## Dependencias
+## Dependencias 
 
 Para instalar las dependecias se hace lo siguiente:
 
 ```
- pip install python-Levenshtein flet pyinstaller requests
+ git clone https://github.com/Wallsified/WeatherReport
+ cd WeatherReport/ 
+ python3 -m venv .env
+ source /env/bin/activate
+ pip install -r Resources/requirements.txt
 ```
 
 ## Ejecución del Programa
@@ -23,15 +27,16 @@ Para instalar las dependecias se hace lo siguiente:
 En la carpeta del proyecto se abre la terminal y se ejecutan los siguientes comandos:
 
 ```
-flet run search.py
+flet run GUI/weather_reporter.py
 ```
 
-Para tener un ejecutable para su sistema operativo se hace:
+<!-- Para tener un ejecutable para su sistema operativo se hace:
 ```
 flet pack search_window.py --name WeatherReporter --icon Assets/images/appIcon.icoc --add-data "Assets:Assets"
 ```
 
 De igual manera se incluyen versiones para IOs/MacOS, Windows y Linux en la carpeta [/dist](dist/)
+ -->
 
 ## Proceso de solución del problema
 
