@@ -99,7 +99,7 @@ class WeatherSearcher(UserControl):
             text_size= 14,
             max_lines=1,
             multiline= False,
-            max_length= 20,
+            max_length= 16, #Longitud máxima de ID del boleto
             filled= True,
             border_color= NAVY_BLUE,
             keyboard_type= KeyboardType.TEXT,
@@ -158,77 +158,77 @@ class WeatherSearcher(UserControl):
             heading_text_style= TextStyle(size=15,
                                         weight='W_500', color = CLOUD_WHITE,),
             vertical_lines=border.BorderSide(5, CLOUD_WHITE),
-            column_spacing=40,
+            #column_spacing=50,
             width=1500,
             columns= [
                 DataColumn(
-                    Text(value= "Información Lugar de Partida", text_align= 'CENTER'),
+                    Text(value= "Información Lugar de Partida", text_align= 'JUSTIFY'),
                         tooltip="Información de la Ubicación de Partida"
                 ),
                 DataColumn(
-                    Text(value= "Información Lugar de LLegada",text_align= 'CENTER'),
+                    Text(value= "Información Lugar de LLegada",text_align= 'JUSTIFY'),
                         tooltip="Información de la Ubicación de Llegada"
                 ),
             ]
         )
 
         information_headers = DataTable(
-            border= border.all(1, NAVY_BLUE),
+            border= border.all(2, NAVY_BLUE),
             border_radius=15,
             heading_row_height=100,
             divider_thickness=2,
             heading_text_style= TextStyle(size=15,
                                       color=NAVY_BLUE, weight='W_500'),
-            vertical_lines=border.BorderSide(1, NAVY_BLUE),
-            column_spacing=40,
+            vertical_lines=border.BorderSide(2, NAVY_BLUE),
+            column_spacing=28,
             width=1500,
             columns=[
                         DataColumn(
-                            Text(value= "Código\nIATA", text_align= 'CENTER'),
+                            Text(value= "Código\n\tIATA", text_align= 'JUSTIFY'),
                             tooltip="Identificador IATA del Lugar de Origen"
                         ),
                         DataColumn(
-                            Text(value= "Latitud",text_align= 'CENTER'),
+                            Text(value= "   Latitud   ",text_align= 'JUSTIFY'),
                             tooltip="Latitud del Lugar de Origen"
                         ),
                         DataColumn(
-                            Text(value= "Longitud", text_align= 'CENTER'),
+                            Text(value= "   Longitud   ", text_align= 'JUSTIFY'),
                             tooltip="Longitud del Lugar de Origen"
                         ),
                         DataColumn(
-                            Text("Clima"),
+                            Text("   Clima   ", text_align= "JUSTIFY"),
                             tooltip="Clima del Punto de Partida"
                         ),
                         DataColumn(
-                            Text(value= "Temp.\nMin./Max."),
+                            Text(value= "Temp.\nMin./Max.", text_align= "JUSTIFY"),
                             tooltip= "Temperaturas del Punto de Partida"
                         ),
                         DataColumn(
-                            Text(value= "% Humedad"),
+                            Text(value= "        %\nHumedad", text_align= "JUSTIFY"),
                             tooltip= "Humedad del Punto de Partida"
                         ),
                         DataColumn(
-                            Text(value="Código\nIATA", text_align= 'CENTER'),
+                            Text(value=" Código\n IATA ", text_align= 'JUSTIFY'),
                             tooltip="Identificador IATA del Lugar de Destino"
                         ),
                         DataColumn(
-                            Text(value="Latitud", text_align= 'CENTER'),
+                            Text(value="   Latitud   ", text_align= 'JUSTIFY'),
                             tooltip="Latitud del Lugar de Destino"
                         ),
                         DataColumn(
-                            Text(value="Longitud", text_align= 'CENTER'),
+                            Text(value="   Longitud   ", text_align= 'JUSTIFY'),
                             tooltip="Longitud del Lugar de Destino"
                         ),
                         DataColumn(
-                            Text(value="Clima", text_align= 'CENTER'),
+                            Text(value="   Clima   ", text_align= 'JUSTIFY'),
                             tooltip="Clima del Punto de Destino"
                         ),
                         DataColumn(
-                            Text(value= "Temp.\nMin./Max."),
+                            Text(value= "Temp.\nMin./Max.", text_align= "JUSTIFY"),
                             tooltip= "Temperaturas del Punto de Destino"
                         ),
                         DataColumn(
-                            Text(value= "% Humedad"),
+                            Text(value= "        %\nHumedad", text_align= "JUSTIFY"),
                             tooltip= "Humedad del Punto de Destino"
                         ),
                     ],
@@ -248,35 +248,34 @@ class WeatherSearcher(UserControl):
             search_query.disabled = True
             self.update()
             search_results_grid.clean()
-            weather_results = searcher.search_cache(search_term)
 
-            if len(search_term) == 0:
+            if len(search_term) == 0 or len(search_results_grid.controls) == 0:
                 search_results_grid.clean()
                 self.page.show_snack_bar(SnackBar(content=
                 Text("La Búsqueda No Arrojó Resultados. Favor de Intentar de nuevo.",
                 color= CLOUD_WHITE),
                     open=True, bgcolor= NAVY_BLUE, duration= 2000, close_icon_color= True,))
-                weather_results = []
-
-            for index, sublista in enumerate(weather_results):
-                for data in sublista:
-                    search_results_grid.controls.append(
-                        Container(
-                            Text(
-                                value=f"{data}",
-                                size=14,
-                                width=90,
-                                height= 40,
-                                text_align="center",
-                                weight= FontWeight.W_500
-                            ),
-                        border= border.all(width= 1.5, color = NAVY_BLUE),
-                        alignment= alignment.center,
-                        bgcolor = CLEAR_BLUE,
-                        border_radius= border_radius.all(15)
+                #weather_results = []
+            else:
+                for index, sublista in enumerate(searcher.search_cache(search_term)):
+                    for data in sublista:
+                        search_results_grid.controls.append(
+                            Container(
+                                Text(
+                                    value=f"{data}",
+                                    size=14,
+                                    width=90,
+                                    height= 40,
+                                    text_align="center",
+                                    weight= FontWeight.W_500
+                                ),
+                            border= border.all(width= 1.5, color = NAVY_BLUE),
+                            alignment= alignment.center,
+                            bgcolor = CLEAR_BLUE,
+                            border_radius= border_radius.all(15)
+                            )
                         )
-                    )
-                self.update()
+                    self.update()
 
             search_query.disabled = False
             self.update()
