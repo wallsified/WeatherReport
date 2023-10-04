@@ -23,10 +23,12 @@ from flet import (
     UserControl, alignment, icons,
     KeyboardType, ElevatedButton,
     ButtonStyle, MaterialState, colors,
-    DataTable, DataColumn, DataRow,
-    DataCell, TextStyle
+    TextStyle, DataTable, DataColumn,
+    FontWeight
 )
 
+# Esto garantiza orden en la estructura y que al momento de
+# interpretar el archivo no tengamos errores de tipo "ModuleNotFoundError"
 path_to_module = Path(__file__).parents[1]
 sys.path.append(str(path_to_module))
 
@@ -59,6 +61,11 @@ class WeatherSearcher(UserControl):
         - UserControl: Nos permite interactuar con la GUI. Es una
             particularidad de usar Flet.
 
+    Métodos
+    -------
+        __init__: Método constructor de la clase WeatherSearcher
+        build: Es donde propiamente se crea la funcionalidad de la clase. 
+
     """
     cache.run_cache()
 
@@ -71,9 +78,16 @@ class WeatherSearcher(UserControl):
 
     def build(self):
         """
-        Esta es la función de "creación" de la clase.
-        Nuevamente, es una particularidad de la librería
-        gráfica.
+        Funcionalidad de la clase. 
+        El nombre "build" es una particularidad 
+        de la librería. 
+
+        Regresa
+        -------
+            Column: Elemento gráfico Columna en donde se acomodan 
+                    los diferentes elementos que construyen la clase:
+                    botones y entradas de búsqueda, indicadores y 
+                    resultados de la búsqueda.
 
         """
         # Campo de Búsqueda
@@ -90,15 +104,14 @@ class WeatherSearcher(UserControl):
             border_color= NAVY_BLUE,
             keyboard_type= KeyboardType.TEXT,
             width= 400,
-            #height= 60,
             on_submit=lambda e: display_icons(e.control.value),
         )
 
+        # Acción a realizar cuando se hace click en el boton de búsqueda
         def search_click(event):
             display_icons(search_txt.value)
 
         # Botón de búsqueda
-        # TODO Corregir estilo.
         search_button = ElevatedButton(
             style= ButtonStyle(
             color={
@@ -126,109 +139,143 @@ class WeatherSearcher(UserControl):
         )
 
         # Vista de Resultados
-        # ? Es necesario usar esto al añadir un DataTable?
-        search_results = GridView(
+        search_results_grid = GridView(
             expand=1,
-            runs_count=10,
-            max_extent= 150,
-            spacing=5,
-            run_spacing=5,
-            child_aspect_ratio=1.0,
-            horizontal= False
+            runs_count=15,
+            max_extent= 110,
+            spacing=8,
+            run_spacing=8,
+            child_aspect_ratio=1,
         )
-        status_bar = Text()
 
-        new_search_results = DataTable(
+        # Headers para señalizar la información en pantalla
+        departure_arrival_headers = DataTable(
+            border= border.all(1, NAVY_BLUE),
+            border_radius=15,
+            heading_row_height=40,
+            #divider_thickness=2,
+            bgcolor= NAVY_BLUE,
+            heading_text_style= TextStyle(size=15,
+                                        weight='W_500', color = CLOUD_WHITE,),
+            vertical_lines=border.BorderSide(5, CLOUD_WHITE),
+            column_spacing=40,
+            width=1500,
+            columns= [
+                DataColumn(
+                    Text(value= "Información Lugar de Partida", text_align= 'CENTER'),
+                        tooltip="Información de la Ubicación de Partida"
+                ),
+                DataColumn(
+                    Text(value= "Información Lugar de LLegada",text_align= 'CENTER'),
+                        tooltip="Información de la Ubicación de Llegada"
+                ),
+            ]
+        )
+
+        information_headers = DataTable(
             border= border.all(1, NAVY_BLUE),
             border_radius=15,
             heading_row_height=100,
             divider_thickness=2,
             heading_text_style= TextStyle(size=15,
                                       color=NAVY_BLUE, weight='W_500'),
-            #bgcolor=CLEAR_BLUE,
             vertical_lines=border.BorderSide(1, NAVY_BLUE),
             column_spacing=40,
             width=1500,
             columns=[
                         DataColumn(
-                            Text(value= "IATA\nPartida", text_align= 'CENTER'),
+                            Text(value= "Código\nIATA", text_align= 'CENTER'),
                             tooltip="Identificador IATA del Lugar de Origen"
                         ),
                         DataColumn(
-                            Text(value= "Latitud\nPartida",text_align= 'CENTER'),
+                            Text(value= "Latitud",text_align= 'CENTER'),
                             tooltip="Latitud del Lugar de Origen"
                         ),
                         DataColumn(
-                            Text(value= "Longitud\nPartida", text_align= 'CENTER'),
+                            Text(value= "Longitud", text_align= 'CENTER'),
                             tooltip="Longitud del Lugar de Origen"
                         ),
                         DataColumn(
-                            Text("Clima\nPartida"),
+                            Text("Clima"),
                             tooltip="Clima del Punto de Partida"
                         ),
                         DataColumn(
-                            Text(value= "Temperaturas\nMínima / Máxima"),
+                            Text(value= "Temp.\nMin./Max."),
                             tooltip= "Temperaturas del Punto de Partida"
                         ),
                         DataColumn(
-                            Text(value= "Humedad\nPartida"),
+                            Text(value= "% Humedad"),
                             tooltip= "Humedad del Punto de Partida"
                         ),
                         DataColumn(
-                            Text(value="IATA\nDestino", text_align= 'CENTER'),
+                            Text(value="Código\nIATA", text_align= 'CENTER'),
                             tooltip="Identificador IATA del Lugar de Destino"
                         ),
                         DataColumn(
-                            Text(value="Latitud\nDestino", text_align= 'CENTER'),
+                            Text(value="Latitud", text_align= 'CENTER'),
                             tooltip="Latitud del Lugar de Destino"
                         ),
                         DataColumn(
-                            Text(value="Longitud\nDestino", text_align= 'CENTER'),
+                            Text(value="Longitud", text_align= 'CENTER'),
                             tooltip="Longitud del Lugar de Destino"
                         ),
                         DataColumn(
-                            Text(value="Clima\nDestino", text_align= 'CENTER'),
+                            Text(value="Clima", text_align= 'CENTER'),
                             tooltip="Clima del Punto de Destino"
                         ),
                         DataColumn(
-                            Text(value= "Temperaturas\nMínima / Máxima"),
+                            Text(value= "Temp.\nMin./Max."),
                             tooltip= "Temperaturas del Punto de Destino"
                         ),
                         DataColumn(
-                            Text(value= "Humedad\nDestino"),
-                            tooltip= "Humedad del Punto de Partida"
+                            Text(value= "% Humedad"),
+                            tooltip= "Humedad del Punto de Destino"
                         ),
                     ],
         )
 
         def display_icons(search_term: str):
+            """
+            Función para mostrar en pantalla los resultados 
+            de la búsqueda del clima, buscando en caché. 
 
-            # clean search results
+            Parametros
+            ----------
+                search_term: Término de búsqueda ingresado para consultar.
+            """
+
+            # Se limpian las entradas previas con cada búsqueda.
             search_query.disabled = True
             self.update()
-            search_results.clean()
+            search_results_grid.clean()
             weather_results = searcher.search_cache(search_term)
 
             if len(search_term) == 0:
-                search_results.clean()
-                self.page.show_snack_bar(SnackBar(content= Text("Tu búsqueda no arrojó resultados", color= CLOUD_WHITE),
-                    open=True, bgcolor= NAVY_BLUE, duration= 2000, close_icon_color= True, ))
+                search_results_grid.clean()
+                self.page.show_snack_bar(SnackBar(content=
+                Text("La Búsqueda No Arrojó Resultados. Favor de Intentar de nuevo.",
+                color= CLOUD_WHITE),
+                    open=True, bgcolor= NAVY_BLUE, duration= 2000, close_icon_color= True,))
                 weather_results = []
 
             for index, sublista in enumerate(weather_results):
                 for data in sublista:
-                    search_results.controls.append(
-                        # ? Posible cambio a un DataTable.
+                    search_results_grid.controls.append(
                         Container(
-                            Text(value=data),
-                            alignment= alignment.center,
-                            border_radius= border_radius.all(5),
-                            border= border.all(width=2, color= NAVY_BLUE),
-                            width=60,
-                            height=20,
-                            padding=15,
+                            Text(
+                                value=f"{data}",
+                                size=14,
+                                width=90,
+                                height= 40,
+                                text_align="center",
+                                weight= FontWeight.W_500
+                            ),
+                        border= border.all(width= 1.5, color = NAVY_BLUE),
+                        alignment= alignment.center,
+                        bgcolor = CLEAR_BLUE,
+                        border_radius= border_radius.all(15)
+                        )
                     )
-                )
                 self.update()
 
             search_query.disabled = False
@@ -237,9 +284,9 @@ class WeatherSearcher(UserControl):
         return Column(
             [
                 search_query,
-                new_search_results,
-                search_results,
-                status_bar,
+                departure_arrival_headers,
+                information_headers,
+                search_results_grid,
             ],
             expand=True,
         )
@@ -247,13 +294,16 @@ class WeatherSearcher(UserControl):
 
 def main(page: Page):
     """
-    Main de la ventana de ejecución
+    Main de la ventana de ejecución.
     """
+
     page.title = "Weather Reporter"
+    #? Si esta creando con las fuentes de aqui?
     page.fonts = {
         "Roboto Light": "/fonts/Roboto-Light.ttf",
         "Caviar": "fonts/CaviarDreams.ttf"
     }
+    page.window_focused = True
     page.add(WeatherSearcher(expand=True))
 
 
