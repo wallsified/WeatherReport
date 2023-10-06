@@ -25,7 +25,7 @@ timer_runs = threading.Event()
 
 # Llaves, nombre del archivo caché y del dataset empleado, respectivamente
 API_KEY = '5e31a7313683592fc55490ec53637486'
-JSON_CACHE = 'cache.json'
+JSON_CACHE = 'Resources/cache.json'
 DATA_SET = 'Resources/dataset2.csv'
 
 
@@ -61,7 +61,7 @@ def get_cache(*, reset: bool = False):
             with open(file= JSON_CACHE, mode= 'r', encoding= "utf-8") as file:
                 json_data = json.load(file)
                 check_cache(json_data)
-        except(FileNotFoundError, json.JSONDecodeError) as e:
+        except(FileNotFoundError, json.JSONDecodeError) as exception:
             json_data = None
     if not json_data:
         json_data = {'flag': str(datetime.datetime.now()), 'records': {}}

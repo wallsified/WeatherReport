@@ -7,7 +7,7 @@ Version 1.0
 """
 
 import csv
-import Cache.cache as cache
+from Cache import cache
 
 class DatasetManager():
 
@@ -28,12 +28,12 @@ class DatasetManager():
     """
 
     def __init__(self):
-        self.coords = dict()
-        self.iatas = dict()
+        self.coords = {}
+        self.iatas = {}
         self.read_tickets()
 
-        self.names = dict()
-        self.names_list = list()
+        self.names = {}
+        self.names_list = []
         self.read_names()
 
         def valid_name(name):
@@ -66,12 +66,12 @@ class DatasetManager():
             iata_dest = line[2]
             self.iatas[ticket_number] = (iata_orig, iata_dest)
 
-            if self.coords.get(iata_orig) == None:
+            if self.coords.get(iata_orig) is None:
                 lat_orig = float(line[3])
                 long_orig = float(line[4])
                 self.coords[iata_orig] = (lat_orig, long_orig)
 
-            if self.coords.get(iata_dest) == None:
+            if self.coords.get(iata_dest) is None:
                 lat_dest = float(line[5])
                 long_dest = float(line[6])
                 self.coords[iata_dest] = (lat_dest, long_dest)
@@ -131,10 +131,7 @@ class DatasetManager():
         True: El IATA es válido
         False: Caso Contrario
         """
-        if self.coords.get(iata):
-            return True
-        else:
-            return False
+        return bool(self.coords.get(iata))
 
     def get_names_list(self):
         """

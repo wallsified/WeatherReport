@@ -12,31 +12,35 @@
 
 ## Dependencias 
 
-Para instalar las dependecias se hace lo siguiente:
+Primeramente es necesario tener Python y Git instalados en el sistema en sus versiones más recientes. 
+
+La mejor forma de hacerlo es seguir las instrucciones oficiales tanto del lenguaje
+de programación como del programa, ambas en sus webs oficiales.
+
+Uno puede instalar Python dando click [aquí](https://www.python.org/downloads/).
+Por su lado, las descargas de Git se encuentran en [este enlace](https://git-scm.com/downloads).
+
+Es necesario seguir las instrucciones en pantalla de ambos programas antes de seguir 
+con los pasos siguentes.
+
+Para instalar las dependecias se abre una terminal (en Windows puede ser Powershell, en sistemas
+Mac y Linux la preferida funciona sin ningun problema) y se introduce línea por línea lo siguiente:
 
 ```
  git clone https://github.com/Wallsified/WeatherReport
  cd WeatherReport/ 
  python3 -m venv .env
- source /env/bin/activate
+ source /.env/bin/activate
  pip install -r Resources/requirements.txt
 ```
 
 ## Ejecución del Programa
 
-En la carpeta del proyecto se abre la terminal y se ejecutan los siguientes comandos:
+Una vez realizados los pasos anteriores, basta con ejecutar la siguiente linea en la misma terminal: 
 
 ```
 flet run GUI/weather_reporter.py
 ```
-
-<!-- Para tener un ejecutable para su sistema operativo se hace:
-```
-flet pack search_window.py --name WeatherReporter --icon Assets/images/appIcon.icoc --add-data "Assets:Assets"
-```
-
-De igual manera se incluyen versiones para IOs/MacOS, Windows y Linux en la carpeta [/dist](dist/)
- -->
 
 ## Proceso de solución del problema
 
@@ -74,8 +78,8 @@ Se obtendrá la entrada del usuario la cuál podrá ser un no. de ticket, IATA o
 
 ### Pseudocódigo
 
-Este puede verse con más detalle en el [correspondiente](/Reports/Pseudocode.pdf).
+Este puede verse con más detalle en el [correspondiente.](/Reports/Pseudocode.pdf)
 
 ## Presentación del Proyecto
 
-De igual manera puede verse con más detalle en su archivo [correspondiente](/Reports/Weather%20Reporter%20Presentation%20(Beta).pdf).
+De igual manera puede verse con más detalle en su archivo [correspondiente.](/Reports/Weather%20Reporter%20Presentation%20(Beta).pdf)

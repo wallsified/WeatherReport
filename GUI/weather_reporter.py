@@ -166,7 +166,7 @@ class WeatherSearcher(UserControl):
                         tooltip="Información de la Ubicación de Partida"
                 ),
                 DataColumn(
-                    Text(value= "Información Lugar de LLegada",text_align= 'JUSTIFY'),
+                    Text(value= "Información Lugar de Llegada",text_align= 'JUSTIFY'),
                         tooltip="Información de la Ubicación de Llegada"
                 ),
             ]
@@ -249,7 +249,7 @@ class WeatherSearcher(UserControl):
             self.update()
             search_results_grid.clean()
 
-            if len(search_term) == 0 or len(search_results_grid.controls) == 0:
+            if len(search_term) == 0:
                 search_results_grid.clean()
                 self.page.show_snack_bar(SnackBar(content=
                 Text("La Búsqueda No Arrojó Resultados. Favor de Intentar de nuevo.",

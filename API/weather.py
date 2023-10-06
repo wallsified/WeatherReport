@@ -1,4 +1,9 @@
-""" Modulo de la API """
+""" 
+Modulo de la API.
+Author: @EdgarMontelongo 
+Version 1.0
+
+"""
 import datetime
 import requests
 
