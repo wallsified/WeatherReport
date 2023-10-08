@@ -6,6 +6,7 @@ Version 1.0
 """
 import datetime
 import requests
+import time
 
 class Weather():
     '''
@@ -36,6 +37,9 @@ class Weather():
         self.temp_max=temp_max
         self.humidity=humidity
         self.hour=hour
+
+    def __str__(self):
+        return "{climate: "+str(self.climate)+", temp_min: "+str(self.temp_min)+", temp_max: "+str(self.temp_max)+", humidity:"+str(self.humidity)+", hour: "+str(self.hour)+"}"
 
 class WeatherTimeException(Exception):
     '''
@@ -165,7 +169,10 @@ class WeatherApi:
                 if not appended:
                     result.append(result[j-1])
             else:
-                result.append(None)
+                i = Data.json()["list"][0]
+                result.append(Weather(i["weather"][0]["main"],i["main"]["temp_min"],
+                                          i["main"]["temp_max"],i["main"]["humidity"],
+                                          int(time.time())))
         return result
 
     @staticmethod
@@ -182,7 +189,7 @@ class WeatherApi:
         try:
             raw_weather_data=requests.get(
                 "https://api.openweathermap.org/data/2.5/forecast?lat="+str(lat)+"&lon="
-                +str(lon)+"&appid="+key+"&units=metric")
+                +str(lon)+"&appid="+key+"&units=metric&cnt=8")
         except:
             raise requests.exceptions.RequestException
 

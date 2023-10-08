@@ -180,6 +180,13 @@ def cacher():
         data['records'][iat[i][0]] = []
         wter = weather.WeatherApi.get_weather_array(iat[i][1][0],
                                                   iat[i][1][1], API_KEY)
+        # print("Clima en ("+str(iat[i][1][0])+", "+str(iat[i][1][1])+")")
+        # print("wter len: "+str(len(wter)))
+        # for e in wter:
+        #     print(str(e))
+        #     if e == None:
+        #         print("-----------NONE----------")
+        print("----")
         if not isinstance(wter, list):
             break
         for k in range(24):
