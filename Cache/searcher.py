@@ -104,7 +104,9 @@ def take_from_cache(regs: dict, cach: dict, origin: str = '', destination: str =
                              cach['records'][destination][hour + 2][0], tempe, cach['records']
                              [origin][hour + 2][3]])
         else:
-            datalist.extend(['NULL', 'NULL', 'NULL', 'NULL', 'NULL', 'NULL'])
+            tempe = str(cach['records'][origin][23][1]) + " /\n " + str(cach['records'][origin][23][2])
+            datalist.extend([destination, regs[destination][0], regs[destination][1],
+                             cach['records'][destination][23][0], tempe, cach['records'][origin][23][3]])
     return datalist
 
 
