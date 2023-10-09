@@ -35,11 +35,11 @@ Mac y Linux la preferida funciona sin ningun problema) y se introduce línea por
 Dependiendo de la plataforma y/o la forma en la que se desee ejecutar el programa, existen dos formas de 
 hacerlo:
 
-### Ejecución en Linux y Windows mediante Archivo Ejecutable
+### Ejecución en Windows mediante Archivo Ejecutable
 
-Anexado al proyecto se incluyes archivos llamados _Weather Reporter-NombreDePlataforma_. Es necesario descomprimir este archivo y entrar a la carpeta descomprimida resultante. 
+Anexado al proyecto se incluyes archivos llamados _Weather Reporter-Windows_. Antes de descomprimir el archivo, primero es necesario [desactivar temporalmente Windows Defender](https://support.microsoft.com/es-es/windows/deshabilitar-la-protecci%C3%B3n-antivirus-de-defender-en-seguridad-de-windows-99e6004f-c54c-8509-773c-a4d776b77960). No por que el programa contenga código malicioso, si no que no posee certificados de seguridad (temporalmente).
 
-Dentro de esta, la estructura se debe de ver como la siguiente:
+Posteriormente, se descomprime el archivo y se entra a la carpeta descomprimida resultante. Dentro de esta, la estructura se debe de ver como la siguiente:
 
 ```
 Weather Reporter - NombreDePlataforma
@@ -53,7 +53,7 @@ Es importante que la carpeta _assets_ se mantenga en esa ubicación y no sufra m
 
 El archivo a ejecutar es _WeatherReporter_, basta con darle doble click para poderlo ejecutar.
 
-### Ejecución en Mac / Terminal (Todas las Plataformas)
+### Ejecución en Mac / Linux / Terminal (Todas las Plataformas)
 
 Nuevamente ocupando la terminal, y en la carpeta donde se encuentra el proyecto descargado, se realiza lo siguiente: 
 

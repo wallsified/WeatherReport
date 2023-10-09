@@ -6,3 +6,4 @@ flet-core==0.10.2
 #flet-runtine==0.10.3
 requests==2.31.0
 requests-unixsocket==0.2.0
+opencv-python==4.6.0.66
