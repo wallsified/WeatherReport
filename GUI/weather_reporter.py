@@ -24,8 +24,10 @@ from flet import (
     KeyboardType, ElevatedButton,
     ButtonStyle, MaterialState, colors,
     TextStyle, DataTable, DataColumn,
-    FontWeight
+    FontWeight, Image, ImageFit
 )
+
+from imgs import imagenes
 
 # Esto garantiza orden en la estructura y que al momento de
 # interpretar el archivo no tengamos errores de tipo "ModuleNotFoundError"
@@ -142,10 +144,10 @@ class WeatherSearcher(UserControl):
         search_results_grid = GridView(
             expand=1,
             runs_count=15,
-            max_extent= 110,
-            spacing=8,
+            max_extent= 100,
+            spacing=6,
             run_spacing=8,
-            child_aspect_ratio=1,
+            child_aspect_ratio=1.4,
         )
 
         # Headers para señalizar la información en pantalla
@@ -272,6 +274,22 @@ class WeatherSearcher(UserControl):
                                     text_align="center",
                                     weight= FontWeight.W_500
                                 ),
+                            border= border.all(width= 1.5, color = NAVY_BLUE),
+                            alignment= alignment.center,
+                            bgcolor = CLEAR_BLUE,
+                            border_radius= border_radius.all(15)
+                            )
+                        )
+                    for i in range(len(sublista)):
+                        data = sublista[i]
+                        try:
+                            imgsrc = imagenes[i%6][data]
+                        except Exception as e:
+                            imgsrc = imagenes[i%6]["default"]
+                            print(str(i%6)+","+str(e))
+                        search_results_grid.controls.append(
+                            Container(
+                                Image(src=imgsrc),
                             border= border.all(width= 1.5, color = NAVY_BLUE),
                             alignment= alignment.center,
                             bgcolor = CLEAR_BLUE,
