@@ -153,12 +153,10 @@ class WeatherSearcher(UserControl):
             border= border.all(1, NAVY_BLUE),
             border_radius=15,
             heading_row_height=40,
-            #divider_thickness=2,
             bgcolor= NAVY_BLUE,
             heading_text_style= TextStyle(size=15,
                                         weight='W_500', color = CLOUD_WHITE,),
             vertical_lines=border.BorderSide(5, CLOUD_WHITE),
-            #column_spacing=50,
             width=1500,
             columns= [
                 DataColumn(
@@ -201,7 +199,7 @@ class WeatherSearcher(UserControl):
                         ),
                         DataColumn(
                             Text(value= "Temp.\nMin./Max.", text_align= "JUSTIFY"),
-                            tooltip= "Temperaturas del Punto de Partida"
+                            tooltip= "Temperaturas del Punto de Partida en Grados Celsius"
                         ),
                         DataColumn(
                             Text(value= "        %\nHumedad", text_align= "JUSTIFY"),
@@ -225,7 +223,7 @@ class WeatherSearcher(UserControl):
                         ),
                         DataColumn(
                             Text(value= "Temp.\nMin./Max.", text_align= "JUSTIFY"),
-                            tooltip= "Temperaturas del Punto de Destino"
+                            tooltip= "Temperaturas del Punto de Destino en Grados Celsius"
                         ),
                         DataColumn(
                             Text(value= "        %\nHumedad", text_align= "JUSTIFY"),
@@ -255,7 +253,6 @@ class WeatherSearcher(UserControl):
                 Text("La Búsqueda No Arrojó Resultados. Favor de Intentar de nuevo.",
                 color= CLOUD_WHITE),
                     open=True, bgcolor= NAVY_BLUE, duration= 2000, close_icon_color= True,))
-                #weather_results = []
             else:
                 for index, sublista in enumerate(searcher.search_cache(search_term)):
                     for data in sublista:

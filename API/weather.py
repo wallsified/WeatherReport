@@ -39,7 +39,8 @@ class Weather():
         self.hour=hour
 
     def __str__(self):
-        return "{climate: "+str(self.climate)+", temp_min: "+str(self.temp_min)+", temp_max: "+str(self.temp_max)+", humidity:"+str(self.humidity)+", hour: "+str(self.hour)+"}"
+        return "{climate: "+str(self.climate)+", temp_min: "+str(self.temp_min)+", temp_max: "+str(
+            self.temp_max)+", humidity:"+str(self.humidity)+", hour: "+str(self.hour)+"}"
 
 class WeatherTimeException(Exception):
     '''
