@@ -286,7 +286,6 @@ class WeatherSearcher(UserControl):
                             imgsrc = imagenes[i%6][data]
                         except Exception as e:
                             imgsrc = imagenes[i%6]["default"]
-                            print(str(i%6)+","+str(e))
                         search_results_grid.controls.append(
                             Container(
                                 Image(src=imgsrc),
