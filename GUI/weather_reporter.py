@@ -244,6 +244,12 @@ class WeatherSearcher(UserControl):
 
             # Se limpian las entradas previas con cada búsqueda.
             search_query.disabled = True
+            if cache.act_runs.is_set():
+                self.page.show_snack_bar(SnackBar(content=
+                Text("Procesando...",
+                color= CLOUD_WHITE),
+                    open=True, bgcolor= NAVY_BLUE, duration= 8000,
+                    show_close_icon=True, close_icon_color= True,))
             self.update()
             search_results_grid.clean()
 
