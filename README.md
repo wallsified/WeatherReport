@@ -59,7 +59,7 @@ Nuevamente ocupando la terminal, y en la carpeta donde se encuentra el proyecto 
 
 ```
  python3 -m venv .env
- source /.env/bin/activate
+ source .env/bin/activate
  pip install -r Resources/requirements.txt
 ```
 
